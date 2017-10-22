@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    compile 'com.google.android.gms:play-services-ads:11.+'
+    compile 'com.facebook.android:audience-network-sdk:4.+'
+
+    testCompile 'junit:junit:4.12'
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+publish {
+    userOrg = properties.getProperty("bintray.user")
+    groupId = 'kr.docs'
+    artifactId = 'smart-ad'
+    publishVersion = '0.0.1'
+    desc = 'Smart Ad with AdMob &amp; Audience Network'
+    website = 'https://github.com/ShockUtility/SmartAdForAndroid'
+    issueTracker = "https://github.com/ShockUtility/SmartAdForAndroid/issues"
+    repository = "https://github.com/ShockUtility/SmartAdForAndroid.git"
+}
+
+// https://bintray.com/shockutility/maven/smart-ad
+// 업로드 : 버전 확인 후 ./.upload.sh

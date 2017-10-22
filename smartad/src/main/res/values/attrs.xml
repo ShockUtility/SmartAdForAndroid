@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="selectedItemBackground" format="reference" />
+
+    <!-- SmartAdBanner -->
+    <declare-styleable name="SmartAdBanner">
+        <attr name="adv_BannerSize">
+            <enum name="Auto"           value="0" />
+            <enum name="Small"          value="1" />
+            <enum name="Large"          value="2" />
+            <enum name="Rectangle"      value="3" />
+        </attr>
+        <attr name="adv_IsAutoStart" format="boolean" />
+        <attr name="adv_IsFirstGoogle" format="boolean" />
+        <attr name="adv_GoogleID" format="string" />
+        <attr name="adv_FacebookID" format="string" />
+    </declare-styleable>
+
+</resources>

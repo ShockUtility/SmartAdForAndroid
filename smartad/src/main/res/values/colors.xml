@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#16181f</color>
+    <color name="colorPrimaryDark">#16181f</color>
+    <color name="colorAccent">#615aa0</color>
+
+    <!-- SmartAdAlert Theme -->
+    <color name="ads_Alert_Background">#c8c8c8</color>
+    <color name="ads_Alert_Title_Background">#615aa0</color>
+    <color name="ads_Alert_Title_Text">#ffffff</color>
+    <color name="ads_Alert_Button_Background">#FFFFFF</color>
+    <color name="ads_Alert_Button_Text">#615aa0</color>
+
+</resources>
+

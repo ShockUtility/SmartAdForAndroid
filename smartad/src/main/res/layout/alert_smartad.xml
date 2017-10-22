@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ads_Alert_Background"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/ads_Alert_Title_Background"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Title"
+            android:textColor="@color/ads_Alert_Title_Text"
+            android:textStyle="bold" />
+
+        <kr.docs.smartad.SmartAdBanner
+            android:id="@+id/smartAdBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            ads:adv_BannerSize="Rectangle"
+            ads:adv_IsAutoStart="false"></kr.docs.smartad.SmartAdBanner>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btnAction1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/ads_Alert_Button_Background"
+                android:enabled="false"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="Action1"
+                android:textColor="@color/ads_Alert_Button_Text" />
+
+            <TextView
+                android:id="@+id/btnAction2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="1"
+                android:background="@color/ads_Alert_Button_Background"
+                android:enabled="true"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="Action2"
+                android:textColor="@color/ads_Alert_Button_Text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        style="@style/AppTheme"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_weight="1"
+        android:visibility="invisible" />
+
+</RelativeLayout>
