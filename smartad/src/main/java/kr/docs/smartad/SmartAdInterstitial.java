@@ -14,6 +14,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     private OnSmartAdInterstitialListener mListener;
 
     private Context mContext;
+    private boolean mIsAutoStart;
     private boolean mIsFirstGoogle;
     private String  mGoogleID;
     private String  mFacebookID;
@@ -21,7 +22,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     private com.google.android.gms.ads.InterstitialAd mGoogleAd;
     private com.facebook.ads.InterstitialAd           mFacebookAd;
 
-    public SmartAdInterstitial(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle) {
+    public SmartAdInterstitial(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle, boolean isAutoStart) {
         if (callback instanceof OnSmartAdInterstitialListener) {
             mListener = (OnSmartAdInterstitialListener) callback;
         } else if (context instanceof OnSmartAdInterstitialListener) {
@@ -32,15 +33,28 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         this.mIsFirstGoogle = isFirstGoogle;
         this.mGoogleID = googleID;
         this.mFacebookID = facebookID;
+        this.mIsAutoStart = isAutoStart;
+
+        loadAd();
     }
 
-    public void showAd() {
+    public void loadAd() {
         if (SmartAd.IsShowAd(this)) {
-            if (mIsFirstGoogle) showGoogle();
-            else showFacebook();
+            if (mIsFirstGoogle) loadGoogle();
+            else loadFacebook();
         } else {
             onDone(SmartAd.AD_TYPE_PASS);
             destroy();
+        }
+    }
+
+    public void showLoadedAd() {
+        if ((mGoogleAd!=null) && (mGoogleAd.isLoaded())) {
+            mGoogleAd.show();
+            onDone(SmartAd.AD_TYPE_GOOGLE);
+        } else if ((mFacebookAd!=null) && (mFacebookAd.isAdLoaded())) {
+            mFacebookAd.show();
+            onDone(SmartAd.AD_TYPE_FACEBOOK);
         }
     }
 
@@ -57,22 +71,21 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         mListener = null;
     }
 
-    static public SmartAdInterstitial showAdWidthCallback(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle) {
-        SmartAdInterstitial ad = new SmartAdInterstitial(context, callback, googleID, facebookID, isFirstGoogle);
-        ad.showAd();
+    static public SmartAdInterstitial showAdWidthCallback(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle, boolean isAutoStart) {
+        SmartAdInterstitial ad = new SmartAdInterstitial(context, callback, googleID, facebookID, isFirstGoogle, isAutoStart);
         return ad;
     }
 
     static public SmartAdInterstitial showAdWidthCallback(Context context, Object callback, String googleID, String facebookID) {
-        return SmartAdInterstitial.showAdWidthCallback(context, callback, googleID, facebookID, true);
+        return SmartAdInterstitial.showAdWidthCallback(context, callback, googleID, facebookID, true, true);
     }
 
     static public SmartAdInterstitial showAd(Context context, String googleID, String facebookID, boolean isFirstGoogle) {
-        return SmartAdInterstitial.showAdWidthCallback(context, null, googleID, facebookID, isFirstGoogle);
+        return SmartAdInterstitial.showAdWidthCallback(context, null, googleID, facebookID, isFirstGoogle, true);
     }
 
     static public SmartAdInterstitial showAd(Context context, String googleID, String facebookID) {
-        return SmartAdInterstitial.showAdWidthCallback(context, null, googleID, facebookID, true);
+        return SmartAdInterstitial.showAdWidthCallback(context, null, googleID, facebookID, true, true);
     }
 
     private void onDone(int type) {
@@ -90,7 +103,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
 
     // 구글 *****************************************************************************************
 
-    private void showGoogle() {
+    private void loadGoogle() {
         mGoogleAd = new com.google.android.gms.ads.InterstitialAd(mContext);
         mGoogleAd.setAdUnitId(mGoogleID);
         mGoogleAd.setAdListener(mGoogleListener);
@@ -102,8 +115,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         public void onAdLoaded() {
             super.onAdLoaded();
 
-            mGoogleAd.show();
-            onDone(SmartAd.AD_TYPE_GOOGLE);
+            if (mIsAutoStart) showLoadedAd();
         }
 
         @Override
@@ -111,7 +123,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
             super.onAdFailedToLoad(i);
             mGoogleAd = null;
 
-            if (mIsFirstGoogle) showFacebook();
+            if (mIsFirstGoogle) loadFacebook();
             else onFail("SmartAd Error : type=Google, message="+i);
         }
 
@@ -124,7 +136,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
 
     // 페이스북 **************************************************************************************
 
-    private void showFacebook() {
+    private void loadFacebook() {
         mFacebookAd = new com.facebook.ads.InterstitialAd(mContext, mFacebookID);
         mFacebookAd.setAdListener(this);
         mFacebookAd.loadAd();
@@ -132,8 +144,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
 
     @Override
     public void onAdLoaded(Ad ad) {
-        mFacebookAd.show();
-        onDone(SmartAd.AD_TYPE_FACEBOOK);
+        if (mIsAutoStart) showLoadedAd();
     }
 
     @Override
@@ -142,7 +153,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         mFacebookAd.destroy();
         mFacebookAd = null;
 
-        if (!mIsFirstGoogle) showGoogle();
+        if (!mIsFirstGoogle) loadGoogle();
         else onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());
     }
 
