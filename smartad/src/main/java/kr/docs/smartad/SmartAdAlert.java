@@ -166,14 +166,14 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     // OnSmartAdBannerListener *********************************************************************
 
     @Override
-    public void OnSmartAdBannerDone(int type) {
+    public void onSmartAdBannerDone(int type) {
         mLoading.setVisibility(View.GONE);
         mBtnAction1.setEnabled(true);
         mBtnAction2.setEnabled(true);
     }
 
     @Override
-    public void OnSmartAdBannerFail(String lastError) {
+    public void onSmartAdBannerFail(String lastError) {
         mLoading.setVisibility(View.GONE);
         mBtnAction1.setEnabled(true);
         mBtnAction2.setEnabled(true);

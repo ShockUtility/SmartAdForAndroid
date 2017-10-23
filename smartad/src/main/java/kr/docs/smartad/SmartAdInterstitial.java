@@ -90,13 +90,13 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
 
     private void onDone(int type) {
         if (mListener!=null) {
-            mListener.OnSmartAdInterstitialDone(type);
+            mListener.onSmartAdInterstitialDone(type);
         }
     }
 
     private void onFail(String lastError) {
         if (mListener!=null) {
-            mListener.OnSmartAdInterstitialFail(lastError);
+            mListener.onSmartAdInterstitialFail(lastError);
             destroy();
         }
     }
@@ -170,7 +170,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     // 반환 인터페이스 *********************************************************************************
 
     public interface OnSmartAdInterstitialListener {
-        void OnSmartAdInterstitialDone(int type);
-        void OnSmartAdInterstitialFail(String lastError);
+        void onSmartAdInterstitialDone(int type);
+        void onSmartAdInterstitialFail(String lastError);
     }
 }

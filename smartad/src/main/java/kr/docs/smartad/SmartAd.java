@@ -13,6 +13,9 @@ import java.util.List;
  */
 
 public class SmartAd {
+    static final public String TEST_BANNER_FACEBOOK = "YOUR_PLACEMENT_ID";
+    static final public String TEST_BANNER_GOOGLE   = "ca-app-pub-3940256099942544/1712485313";
+
     static final public int AD_TYPE_PASS     = -1;
     static final public int AD_TYPE_GOOGLE   = 1;
     static final public int AD_TYPE_FACEBOOK = 2;

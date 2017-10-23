@@ -3,27 +3,26 @@ package kr.docs.smartad;
 import android.app.AlertDialog;
 import android.content.Context;
 
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import java.util.Random;
 
 /**
  * Created by shock on 2017. 8. 30..
  */
 
-public class SmartAdAward implements RewardedVideoAdListener {
+public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedVideoAdListener, com.facebook.ads.RewardedVideoAdListener {
 
     private OnSmartAdAwardListener mListener;
 
     private Context mContext;
     private String  mGoogleID;
-    private String  mFacebookID;            // Facebook is not ready yet!!!
+    private String  mFacebookID;
     private boolean mIsFirstGoogle;
     private AlertDialog mLoadingAlert;
 
-    private RewardedVideoAd mGoogleAd;
-    private boolean mIsAward;
+    private com.google.android.gms.ads.reward.RewardedVideoAd mGoogleAd;
+    private com.facebook.ads.RewardedVideoAd                  mFacebookAd;
+    private boolean mIsAwardShow;
+    private boolean mIsAwardClick;
 
     public SmartAdAward(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle) {
         if (callback instanceof OnSmartAdAwardListener) {
@@ -38,15 +37,21 @@ public class SmartAdAward implements RewardedVideoAdListener {
         this.mFacebookID = facebookID;
     }
 
+    public SmartAdAward(Context context, Object callback, String googleID, String facebookID) {
+        this(context, callback, googleID, facebookID, (new Random()).nextBoolean());
+    }
+
+
     public void showAd() {
-        mIsAward = false;
+        mIsAwardShow = false;
+        mIsAwardClick = false;
 
         if (SmartAd.IsShowAd(this)) {
             mLoadingAlert = SmartAd.loadingAlert(mContext);
 
             if (mIsFirstGoogle) showGoogle();
             else showFacebook();
-        } else onDone(SmartAd.AD_TYPE_PASS, false);
+        } else onDone(SmartAd.AD_TYPE_PASS);
     }
 
     static public void showAdWidthCallback(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle) {
@@ -65,26 +70,28 @@ public class SmartAdAward implements RewardedVideoAdListener {
         SmartAdAward.showAdWidthCallback(context, null, googleID, facebookID, true);
     }
 
-    private void onDone(int type, boolean isAward) {
+    private void onDone(int type) {
         if (mListener!=null) {
-            mListener.OnSmartAdAwardDone(type, isAward);
+            mListener.onSmartAdAwardDone(type, mIsAwardShow, mIsAwardClick);
             mListener = null;
         }
         mGoogleAd = null;
+        mFacebookAd = null;
     }
 
     private void onFail(String lastError) {
         if (mListener!=null) {
-            mListener.OnSmartAdAwardFail(lastError);
+            mListener.onSmartAdAwardFail(lastError);
             mListener = null;
         }
         mGoogleAd = null;
+        mFacebookAd = null;
     }
 
     // 구글 *****************************************************************************************
 
     private void showGoogle() {
-        mGoogleAd = MobileAds.getRewardedVideoAdInstance(mContext);
+        mGoogleAd = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(mContext);
         mGoogleAd.setRewardedVideoAdListener(this);
         mGoogleAd.loadAd(mGoogleID, SmartAd.getGoogleAdRequest());
     }
@@ -97,18 +104,22 @@ public class SmartAdAward implements RewardedVideoAdListener {
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) { // 광고 로딩 실패
-        if (mLoadingAlert!=null) mLoadingAlert.dismiss();
-        onFail("SmartAd Error : type=Google, message="+i);
+        if (mIsFirstGoogle) {
+            showFacebook();
+        } else {
+            if (mLoadingAlert!=null) mLoadingAlert.dismiss();
+            onFail("SmartAd Error : type=Google, message="+i);
+        }
     }
 
     @Override
-    public void onRewarded(RewardItem rewardItem) { // 광고를 모두 시청 했다
-        mIsAward = true;
+    public void onRewarded(com.google.android.gms.ads.reward.RewardItem rewardItem) { // 광고를 모두 시청 했다
+        mIsAwardShow = true;
     }
 
     @Override
     public void onRewardedVideoAdClosed() {
-        onDone(SmartAd.AD_TYPE_GOOGLE, mIsAward);
+        onDone(SmartAd.AD_TYPE_GOOGLE);
     }
 
     @Override public void onRewardedVideoAdOpened() {}
@@ -120,13 +131,48 @@ public class SmartAdAward implements RewardedVideoAdListener {
     // 페이스북 : 아직 국내에 보상 광고가 들어오지 않았다 ******************************************************
 
     private void showFacebook() {
-        onFail("SmartAd Error : type=Facebook, message=Facebook will be ready soon!!!");
+        mFacebookAd = new com.facebook.ads.RewardedVideoAd(mContext, "YOUR_PLACEMENT_ID");
+        mFacebookAd.setAdListener(this);
+        mFacebookAd.loadAd();
     }
+
+    @Override
+    public void onAdLoaded(com.facebook.ads.Ad ad) {
+        if (mLoadingAlert!=null) mLoadingAlert.dismiss();
+        mFacebookAd.show();
+    }
+
+    @Override
+    public void onError(com.facebook.ads.Ad ad, com.facebook.ads.AdError adError) {
+        if (!mIsFirstGoogle) {
+            showGoogle();
+        } else {
+            if (mLoadingAlert!=null) mLoadingAlert.dismiss();
+            onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());
+        }
+    }
+
+    @Override
+    public void onRewardedVideoCompleted() {
+        mIsAwardShow = true;
+    }
+
+    @Override
+    public void onAdClicked(com.facebook.ads.Ad ad) {
+        mIsAwardClick = true;
+    }
+
+    @Override
+    public void onRewardedVideoClosed() {
+        onDone(SmartAd.AD_TYPE_FACEBOOK);
+    }
+
+    @Override public void onLoggingImpression(com.facebook.ads.Ad ad) {}
 
     // 반환 인터페이스 *********************************************************************************
 
     public interface OnSmartAdAwardListener {
-        void OnSmartAdAwardDone(int type, boolean isAward);
-        void OnSmartAdAwardFail(String lastError);
+        void onSmartAdAwardDone(int type, boolean isAwardShow, boolean isAwardClick);
+        void onSmartAdAwardFail(String lastError);
     }
 }

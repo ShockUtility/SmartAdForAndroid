@@ -111,14 +111,14 @@ public class SmartAdBanner extends LinearLayout {
 
     private void onDone(int type) {
         if (mListener!=null) {
-            mListener.OnSmartAdBannerDone(type);
+            mListener.onSmartAdBannerDone(type);
             mListener = null;
         }
     }
 
     private void onFail(String lastError) {
         if (mListener!=null) {
-            mListener.OnSmartAdBannerFail(lastError);
+            mListener.onSmartAdBannerFail(lastError);
             mListener = null;
         }
     }
@@ -207,7 +207,7 @@ public class SmartAdBanner extends LinearLayout {
     // Callback Listener ***************************************************************************
 
     public interface OnSmartAdBannerListener {
-        void OnSmartAdBannerDone(int type);
-        void OnSmartAdBannerFail(String lastError);
+        void onSmartAdBannerDone(int type);
+        void onSmartAdBannerFail(String lastError);
     }
 }
