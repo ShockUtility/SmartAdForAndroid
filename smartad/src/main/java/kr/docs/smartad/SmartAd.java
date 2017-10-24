@@ -2,11 +2,13 @@ package kr.docs.smartad;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.support.annotation.IntDef;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by shock on 2017. 10. 22..
@@ -17,8 +19,15 @@ public class SmartAd {
     static final public String TEST_BANNER_GOOGLE   = "ca-app-pub-3940256099942544/1712485313";
 
     static final public int AD_TYPE_PASS     = -1;
+    static final public int AD_TYPE_RANDOM   = 0;
     static final public int AD_TYPE_GOOGLE   = 1;
     static final public int AD_TYPE_FACEBOOK = 2;
+
+    @IntDef({AD_TYPE_GOOGLE, AD_TYPE_FACEBOOK})
+    public @interface SmartAdTestType {}
+
+    @IntDef({AD_TYPE_RANDOM, AD_TYPE_GOOGLE, AD_TYPE_FACEBOOK})
+    public @interface SmartAdType {}
 
     static private List<String> mGoogleTestDevices = new ArrayList<String>();
 
@@ -35,7 +44,7 @@ public class SmartAd {
         return true;
     }
 
-    static public void addTestDevice(int type, String id) {
+    static public void addTestDevice(@SmartAdTestType int type, String id) {
         switch (type) {
             case AD_TYPE_GOOGLE:
                 mGoogleTestDevices.add(id);
@@ -63,6 +72,10 @@ public class SmartAd {
         alert.setView(v);
 
         return alert.show();
+    }
+
+    static public @SmartAdType int randomAdType() {
+        return (new Random()).nextBoolean() ? AD_TYPE_GOOGLE : AD_TYPE_FACEBOOK;
     }
 
     public interface IsShowAdListener {

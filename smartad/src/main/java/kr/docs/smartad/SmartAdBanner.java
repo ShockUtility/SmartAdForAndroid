@@ -15,18 +15,20 @@ import java.util.Random;
  */
 
 public class SmartAdBanner extends LinearLayout {
-    static final public  int AD_SIZE_AUTO      = 0;
-    static final public  int AD_SIZE_SMALL     = 1;
-    static final public  int AD_SIZE_LARGE     = 2;
-    static final public  int AD_SIZE_RECTANGLE = 3;
+    static final public int AD_SIZE_AUTO      = 0;
+    static final public int AD_SIZE_SMALL     = 1;
+    static final public int AD_SIZE_LARGE     = 2;
+    static final public int AD_SIZE_RECTANGLE = 3;
 
     private OnSmartAdBannerListener             mListener;
     private int                                 mAdSize;
     private boolean                             mIsAutoStart;
-    private boolean                             mIsFirstGoogle;
     private String                              mGoogleID;
     private String                              mFacebookID;
     private boolean                             mIsLoadedLayout = false;
+
+    @SmartAd.SmartAdType
+    private int                                 mAdOrder = SmartAd.AD_TYPE_RANDOM;
 
     private com.google.android.gms.ads.AdView   mGoogleAdView;
     private com.facebook.ads.AdView             mFacebookAdView;
@@ -36,7 +38,6 @@ public class SmartAdBanner extends LinearLayout {
         this.setOrientation(LinearLayout.VERTICAL);
 
         mAdSize         = AD_SIZE_SMALL;
-        mIsFirstGoogle  = true;
         mGoogleID       = null;
         mFacebookID     = null;
     }
@@ -51,10 +52,11 @@ public class SmartAdBanner extends LinearLayout {
         mIsAutoStart   = types.getBoolean(R.styleable.SmartAdBanner_adv_IsAutoStart, true);
         mGoogleID      = types.getString(R.styleable.SmartAdBanner_adv_GoogleID);
         mFacebookID    = types.getString(R.styleable.SmartAdBanner_adv_FacebookID);
-        if (types.hasValue(R.styleable.SmartAdBanner_adv_IsFirstGoogle)) {  // 베너 우선순위 설정이 안되어 있다면 랜덤으로 처리한다.
-            mIsFirstGoogle = types.getBoolean(R.styleable.SmartAdBanner_adv_IsFirstGoogle, true);
-        } else {
-            mIsFirstGoogle = (new Random()).nextBoolean();
+
+        switch (types.getInt(R.styleable.SmartAdBanner_adv_AdOrder, SmartAd.AD_TYPE_RANDOM)) {
+            case SmartAd.AD_TYPE_RANDOM  : mAdOrder = SmartAd.randomAdType();
+            case SmartAd.AD_TYPE_GOOGLE  : mAdOrder = SmartAd.AD_TYPE_GOOGLE;
+            case SmartAd.AD_TYPE_FACEBOOK: mAdOrder = SmartAd.AD_TYPE_FACEBOOK;
         }
 
         if (mIsAutoStart) showAd();
@@ -92,16 +94,19 @@ public class SmartAdBanner extends LinearLayout {
 
     public void showAd() {
         if (SmartAd.IsShowAd(this)) {
-            if (mIsFirstGoogle) showGoogle();
-            else showFacebook();
+            switch (mAdOrder) {
+                case SmartAd.AD_TYPE_GOOGLE  : showGoogle();   break;
+                case SmartAd.AD_TYPE_FACEBOOK: showFacebook(); break;
+            }
         } else onDone(SmartAd.AD_TYPE_PASS);
     }
 
-    public void showAd(int adSize, String googleID, String facebookID, boolean isFirstGoogle) {
+    public void showAd(int adSize, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID) {
         this.mAdSize = adSize;
+        this.mAdOrder = (adOrder == SmartAd.AD_TYPE_RANDOM) ? SmartAd.randomAdType() : adOrder;
         this.mGoogleID = googleID;
         this.mFacebookID = facebookID;
-        this.mIsFirstGoogle = isFirstGoogle;
+
         showAd();
     }
 
@@ -160,7 +165,7 @@ public class SmartAdBanner extends LinearLayout {
         public void onAdFailedToLoad(int i) {
             super.onAdFailedToLoad(i);
 
-            if (mIsFirstGoogle) {
+            if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) {
                 if (mGoogleAdView!=null) mGoogleAdView.setVisibility(GONE);
                 showFacebook();
             } else onFail("SmartAd Error : type=Google, message="+i);
@@ -194,7 +199,7 @@ public class SmartAdBanner extends LinearLayout {
 
         @Override
         public void onError(com.facebook.ads.Ad ad, com.facebook.ads.AdError adError) {
-            if (!mIsFirstGoogle) {
+            if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) {
                 if (mFacebookAdView!=null) mFacebookAdView.setVisibility(GONE);
                 showGoogle();
             } else onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());

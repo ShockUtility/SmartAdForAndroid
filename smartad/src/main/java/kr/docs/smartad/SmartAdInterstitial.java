@@ -2,27 +2,25 @@ package kr.docs.smartad;
 
 import android.content.Context;
 
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-
 /**
  * Created by shock on 2017. 8. 30..
  */
 
 public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListener {
 
-    private OnSmartAdInterstitialListener mListener;
+    private OnSmartAdInterstitialListener             mListener;
+    private Context                                   mContext;
+    private boolean                                   mIsAutoStart;
+    private String                                    mGoogleID;
+    private String                                    mFacebookID;
 
-    private Context mContext;
-    private boolean mIsAutoStart;
-    private boolean mIsFirstGoogle;
-    private String  mGoogleID;
-    private String  mFacebookID;
+    @SmartAd.SmartAdType
+    private int                                       mAdOrder = SmartAd.AD_TYPE_RANDOM;
 
     private com.google.android.gms.ads.InterstitialAd mGoogleAd;
     private com.facebook.ads.InterstitialAd           mFacebookAd;
 
-    public SmartAdInterstitial(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle, boolean isAutoStart) {
+    public SmartAdInterstitial(Context context, Object callback, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID, boolean isAutoStart) {
         if (callback instanceof OnSmartAdInterstitialListener) {
             mListener = (OnSmartAdInterstitialListener) callback;
         } else if (context instanceof OnSmartAdInterstitialListener) {
@@ -30,7 +28,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         }
 
         this.mContext = context;
-        this.mIsFirstGoogle = isFirstGoogle;
+        this.mAdOrder = (adOrder==SmartAd.AD_TYPE_RANDOM) ? SmartAd.randomAdType() : adOrder;
         this.mGoogleID = googleID;
         this.mFacebookID = facebookID;
         this.mIsAutoStart = isAutoStart;
@@ -40,8 +38,10 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
 
     public void loadAd() {
         if (SmartAd.IsShowAd(this)) {
-            if (mIsFirstGoogle) loadGoogle();
-            else loadFacebook();
+            switch (mAdOrder) {
+                case SmartAd.AD_TYPE_GOOGLE  : loadGoogle();   break;
+                case SmartAd.AD_TYPE_FACEBOOK: loadFacebook(); break;
+            }
         } else {
             onDone(SmartAd.AD_TYPE_PASS);
             destroy();
@@ -71,21 +71,21 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         mListener = null;
     }
 
-    static public SmartAdInterstitial showAdWidthCallback(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle, boolean isAutoStart) {
-        SmartAdInterstitial ad = new SmartAdInterstitial(context, callback, googleID, facebookID, isFirstGoogle, isAutoStart);
+    static public SmartAdInterstitial showAdWidthCallback(Context context, Object callback, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID, boolean isAutoStart) {
+        SmartAdInterstitial ad = new SmartAdInterstitial(context, callback, adOrder, googleID, facebookID, isAutoStart);
         return ad;
     }
 
     static public SmartAdInterstitial showAdWidthCallback(Context context, Object callback, String googleID, String facebookID) {
-        return SmartAdInterstitial.showAdWidthCallback(context, callback, googleID, facebookID, true, true);
+        return SmartAdInterstitial.showAdWidthCallback(context, callback, SmartAd.AD_TYPE_RANDOM, googleID, facebookID, true);
     }
 
-    static public SmartAdInterstitial showAd(Context context, String googleID, String facebookID, boolean isFirstGoogle) {
-        return SmartAdInterstitial.showAdWidthCallback(context, null, googleID, facebookID, isFirstGoogle, true);
+    static public SmartAdInterstitial showAd(Context context, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID, boolean isAutoStart) {
+        return SmartAdInterstitial.showAdWidthCallback(context, null, adOrder, googleID, facebookID, isAutoStart);
     }
 
     static public SmartAdInterstitial showAd(Context context, String googleID, String facebookID) {
-        return SmartAdInterstitial.showAdWidthCallback(context, null, googleID, facebookID, true, true);
+        return SmartAdInterstitial.showAdWidthCallback(context, null, SmartAd.AD_TYPE_RANDOM, googleID, facebookID, true);
     }
 
     private void onDone(int type) {
@@ -123,7 +123,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
             super.onAdFailedToLoad(i);
             mGoogleAd = null;
 
-            if (mIsFirstGoogle) loadFacebook();
+            if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) loadFacebook();
             else onFail("SmartAd Error : type=Google, message="+i);
         }
 
@@ -143,29 +143,29 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     }
 
     @Override
-    public void onAdLoaded(Ad ad) {
+    public void onAdLoaded(com.facebook.ads.Ad ad) {
         if (mIsAutoStart) showLoadedAd();
     }
 
     @Override
-    public void onError(Ad ad, AdError adError) {
+    public void onError(com.facebook.ads.Ad ad, com.facebook.ads.AdError adError) {
         ad.destroy();
         mFacebookAd.destroy();
         mFacebookAd = null;
 
-        if (!mIsFirstGoogle) loadGoogle();
+        if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) loadGoogle();
         else onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());
     }
 
     @Override
-    public void onInterstitialDismissed(Ad ad) {
+    public void onInterstitialDismissed(com.facebook.ads.Ad ad) {
         ad.destroy();
         destroy();
     }
 
-    @Override public void onAdClicked(Ad ad) {}
-    @Override public void onLoggingImpression(Ad ad) {}
-    @Override public void onInterstitialDisplayed(Ad ad) {}
+    @Override public void onAdClicked(com.facebook.ads.Ad ad) {}
+    @Override public void onLoggingImpression(com.facebook.ads.Ad ad) {}
+    @Override public void onInterstitialDisplayed(com.facebook.ads.Ad ad) {}
 
     // 반환 인터페이스 *********************************************************************************
 

@@ -18,19 +18,21 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     static public final int BUTTON_1 = 1;
     static public final int BUTTON_2 = 2;
 
-    private int                     mAdSize;
-    private String                  mGoogleID;
-    private String                  mFacebookID;
-    private boolean                 mIsFirstGoogle;
-    private String                  mAlertTitle;
-    private String                  mAction1Title;
-    private String                  mAction2Title;
-    private SmartAdAlertListener    mListener;
+    private SmartAdAlertListener            mListener;
+    private int                             mAdSize;
+    private String                          mGoogleID;
+    private String                          mFacebookID;
+    private String                          mAlertTitle;
+    private String                          mAction1Title;
+    private String                          mAction2Title;
 
-    private ProgressBar             mLoading;
-    private TextView                mBtnAction1;
-    private TextView                mBtnAction2;
-    private long                    mAalertButtonDelayMilliseconds = 3000;
+    @SmartAd.SmartAdType
+    private int                             mAdOrder = SmartAd.AD_TYPE_RANDOM;
+
+    private ProgressBar                     mLoading;
+    private TextView                        mBtnAction1;
+    private TextView                        mBtnAction2;
+    private long                            mAalertButtonDelayMilliseconds = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
 
         if (SmartAd.IsShowAd(this)) {
             mLoading.setVisibility(View.VISIBLE);
-            adBanner.showAd(mAdSize, mGoogleID, mFacebookID, mIsFirstGoogle);
+            adBanner.showAd(mAdSize, mAdOrder, mGoogleID, mFacebookID);
 
             // Facebook error may not be detected in some cases!!!
             final Handler handler = new Handler();
@@ -97,16 +99,16 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     }
 
     public SmartAdAlert(Context context,
-                        String googleID, String facebookID, boolean isFirstGoogle,
+                        @SmartAd.SmartAdType int adOrder, String googleID, String facebookID,
                         String title, String action1Title, String action2Title,
                         final SmartAdAlertListener listener)
     {
         super(context, android.R.style.Theme_DeviceDefault_Dialog_NoActionBar);
 
         this.mAdSize         = SmartAdBanner.AD_SIZE_RECTANGLE;
+        this.mAdOrder        = (adOrder==SmartAd.AD_TYPE_RANDOM) ? SmartAd.randomAdType() : adOrder;
         this.mGoogleID       = googleID;
         this.mFacebookID     = facebookID;
-        this.mIsFirstGoogle  = isFirstGoogle;
         this.mAlertTitle     = title;
         this.mAction1Title   = action1Title;
         this.mAction2Title   = action2Title;
@@ -114,12 +116,12 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     }
 
     static public void select(Context context,
-                              String googleID, String facebookID, boolean isFirstGoogle,
+                              @SmartAd.SmartAdType int adOrder, String googleID, String facebookID,
                               String title, String action1Title, String action2Title,
                               final SmartAdAlertListener callback)
     {
         new SmartAdAlert(context,
-                googleID, facebookID, isFirstGoogle,
+                adOrder, googleID, facebookID,
                 title, action1Title, action2Title, callback).show();
     }
 
@@ -128,15 +130,15 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
                               String title, String action1Title, String action2Title,
                               final SmartAdAlertListener callback)
     {
-        SmartAdAlert.select(context, googleID, facebookID, true, title, action1Title, action2Title, callback);
+        SmartAdAlert.select(context, SmartAd.AD_TYPE_RANDOM, googleID, facebookID, title, action1Title, action2Title, callback);
     }
 
     static public void confirm(Context context,
-                               String googleID, String facebookID, boolean isFirstGoogle,
+                               @SmartAd.SmartAdType int adOrder, String googleID, String facebookID,
                                String title, final SmartAdAlertListener callback)
     {
         SmartAdAlert.select(context,
-                googleID, facebookID, isFirstGoogle,
+                adOrder, googleID, facebookID,
                 title, context.getString(android.R.string.ok), context.getString(android.R.string.cancel), callback);
     }
 
@@ -144,15 +146,15 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
                                String googleID, String facebookID,
                                String title, final SmartAdAlertListener callback)
     {
-        SmartAdAlert.confirm(context, googleID, facebookID, true, title, callback);
+        SmartAdAlert.confirm(context, SmartAd.AD_TYPE_RANDOM, googleID, facebookID, title, callback);
     }
 
     static public void alert(Context context,
-                             String googleID, String facebookID, boolean isFirstGoogle,
+                             @SmartAd.SmartAdType int adOrder, String googleID, String facebookID,
                              String title, final SmartAdAlertListener callback)
     {
         SmartAdAlert.select(context,
-                googleID, facebookID, isFirstGoogle,
+                adOrder, googleID, facebookID,
                 title, context.getString(android.R.string.ok), null, callback);
     }
 
@@ -160,7 +162,7 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
                              String googleID, String facebookID,
                              String title, final SmartAdAlertListener callback)
     {
-        SmartAdAlert.alert(context, googleID, facebookID, true, title, callback);
+        SmartAdAlert.alert(context, SmartAd.AD_TYPE_RANDOM, googleID, facebookID, title, callback);
     }
 
     // OnSmartAdBannerListener *********************************************************************

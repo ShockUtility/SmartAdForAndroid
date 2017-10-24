@@ -3,28 +3,27 @@ package kr.docs.smartad;
 import android.app.AlertDialog;
 import android.content.Context;
 
-import java.util.Random;
-
 /**
  * Created by shock on 2017. 8. 30..
  */
 
 public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedVideoAdListener, com.facebook.ads.RewardedVideoAdListener {
 
-    private OnSmartAdAwardListener mListener;
+    private OnSmartAdAwardListener                            mListener;
+    private Context                                           mContext;
+    private String                                            mGoogleID;
+    private String                                            mFacebookID;
+    private AlertDialog                                       mLoadingAlert;
 
-    private Context mContext;
-    private String  mGoogleID;
-    private String  mFacebookID;
-    private boolean mIsFirstGoogle;
-    private AlertDialog mLoadingAlert;
+    @SmartAd.SmartAdType
+    private int                                               mAdOrder = SmartAd.AD_TYPE_RANDOM;
 
     private com.google.android.gms.ads.reward.RewardedVideoAd mGoogleAd;
     private com.facebook.ads.RewardedVideoAd                  mFacebookAd;
-    private boolean mIsAwardShow;
-    private boolean mIsAwardClick;
+    private boolean                                           mIsAwardShow;
+    private boolean                                           mIsAwardClick;
 
-    public SmartAdAward(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle) {
+    public SmartAdAward(Context context, Object callback, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID) {
         if (callback instanceof OnSmartAdAwardListener) {
             mListener = (OnSmartAdAwardListener) callback;
         } else if (context instanceof OnSmartAdAwardListener) {
@@ -32,15 +31,14 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
         }
 
         this.mContext = context;
-        this.mIsFirstGoogle = isFirstGoogle;
+        this.mAdOrder = (adOrder==SmartAd.AD_TYPE_RANDOM) ? SmartAd.randomAdType() : adOrder;
         this.mGoogleID = googleID;
         this.mFacebookID = facebookID;
     }
 
     public SmartAdAward(Context context, Object callback, String googleID, String facebookID) {
-        this(context, callback, googleID, facebookID, (new Random()).nextBoolean());
+        this(context, callback, SmartAd.AD_TYPE_RANDOM, googleID, facebookID);
     }
-
 
     public void showAd() {
         mIsAwardShow = false;
@@ -49,25 +47,27 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
         if (SmartAd.IsShowAd(this)) {
             mLoadingAlert = SmartAd.loadingAlert(mContext);
 
-            if (mIsFirstGoogle) showGoogle();
-            else showFacebook();
+            switch (mAdOrder) {
+                case SmartAd.AD_TYPE_GOOGLE  : showGoogle();   break;
+                case SmartAd.AD_TYPE_FACEBOOK: showFacebook(); break;
+            }
         } else onDone(SmartAd.AD_TYPE_PASS);
     }
 
-    static public void showAdWidthCallback(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle) {
-        SmartAdAward ad = new SmartAdAward(context, callback, googleID, facebookID, isFirstGoogle);
+    static public void showAdWidthCallback(Context context, Object callback, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID) {
+        SmartAdAward ad = new SmartAdAward(context, callback, adOrder, googleID, facebookID);
         ad.showAd();
     }
     static public void showAdWidthCallback(Context context, Object callback, String googleID, String facebookID) {
-        SmartAdAward.showAdWidthCallback(context, callback, googleID, facebookID, true);
+        SmartAdAward.showAdWidthCallback(context, callback, SmartAd.AD_TYPE_RANDOM, googleID, facebookID);
     }
 
-    static public void showAd(Context context, String googleID, String facebookID, boolean isFirstGoogle) {
-        SmartAdAward.showAdWidthCallback(context, null, googleID, facebookID, isFirstGoogle);
+    static public void showAd(Context context, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID) {
+        SmartAdAward.showAdWidthCallback(context, null, adOrder, googleID, facebookID);
     }
 
     static public void showAd(Context context, String googleID, String facebookID) {
-        SmartAdAward.showAdWidthCallback(context, null, googleID, facebookID, true);
+        SmartAdAward.showAdWidthCallback(context, null, SmartAd.AD_TYPE_RANDOM, googleID, facebookID);
     }
 
     private void onDone(int type) {
@@ -104,7 +104,7 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) { // 광고 로딩 실패
-        if (mIsFirstGoogle) {
+        if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) {
             showFacebook();
         } else {
             if (mLoadingAlert!=null) mLoadingAlert.dismiss();
@@ -144,7 +144,7 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
 
     @Override
     public void onError(com.facebook.ads.Ad ad, com.facebook.ads.AdError adError) {
-        if (!mIsFirstGoogle) {
+        if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) {
             showGoogle();
         } else {
             if (mLoadingAlert!=null) mLoadingAlert.dismiss();
