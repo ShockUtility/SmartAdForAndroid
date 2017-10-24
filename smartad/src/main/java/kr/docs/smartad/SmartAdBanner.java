@@ -54,9 +54,9 @@ public class SmartAdBanner extends LinearLayout {
         mFacebookID    = types.getString(R.styleable.SmartAdBanner_adv_FacebookID);
 
         switch (types.getInt(R.styleable.SmartAdBanner_adv_AdOrder, SmartAd.AD_TYPE_RANDOM)) {
-            case SmartAd.AD_TYPE_RANDOM  : mAdOrder = SmartAd.randomAdType();
-            case SmartAd.AD_TYPE_GOOGLE  : mAdOrder = SmartAd.AD_TYPE_GOOGLE;
-            case SmartAd.AD_TYPE_FACEBOOK: mAdOrder = SmartAd.AD_TYPE_FACEBOOK;
+            case SmartAd.AD_TYPE_RANDOM  : mAdOrder = SmartAd.randomAdType();   break;
+            case SmartAd.AD_TYPE_GOOGLE  : mAdOrder = SmartAd.AD_TYPE_GOOGLE;   break;
+            case SmartAd.AD_TYPE_FACEBOOK: mAdOrder = SmartAd.AD_TYPE_FACEBOOK; break;
         }
 
         if (mIsAutoStart) showAd();
