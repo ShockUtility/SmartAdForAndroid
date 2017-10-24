@@ -6,10 +6,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.LinearLayout;
 
-import com.facebook.ads.AdSize;
-
-import java.util.Random;
-
 /**
  * Created by shock on 2017. 10. 13..
  */
@@ -190,13 +186,13 @@ public class SmartAdBanner extends LinearLayout {
         mFacebookAdView.loadAd();
     }
 
-    private AdSize getFacebookAdSize() {
+    private com.facebook.ads.AdSize getFacebookAdSize() {
         switch (mAdSize) {
-            case AD_SIZE_SMALL     : return AdSize.BANNER_HEIGHT_50;
-            case AD_SIZE_LARGE     : return AdSize.BANNER_HEIGHT_90;
-            case AD_SIZE_RECTANGLE : return AdSize.RECTANGLE_HEIGHT_250;
+            case AD_SIZE_SMALL     : return com.facebook.ads.AdSize.BANNER_HEIGHT_50;
+            case AD_SIZE_LARGE     : return com.facebook.ads.AdSize.BANNER_HEIGHT_90;
+            case AD_SIZE_RECTANGLE : return com.facebook.ads.AdSize.RECTANGLE_HEIGHT_250;
         }
-        return AdSize.BANNER_HEIGHT_50;
+        return com.facebook.ads.AdSize.BANNER_HEIGHT_50;
     }
 
     private com.facebook.ads.AdListener mFacebookListener = new com.facebook.ads.AdListener() {
