@@ -18,8 +18,9 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
 
     static public final int BUTTON_OK       = 1;
     static public final int BUTTON_CANCEL   = 2;
+    static public final int BUTTON_BACK     = 3;
 
-    @IntDef({BUTTON_OK, BUTTON_CANCEL})
+    @IntDef({BUTTON_OK, BUTTON_CANCEL, BUTTON_BACK})
     public @interface SmartAdAlertButton {}
 
     private SmartAdAlertListener            mListener;
@@ -104,7 +105,7 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
 
     @Override
     public void onBackPressed() {
-        if(mListener != null) mListener.result(BUTTON_CANCEL);
+        if(mListener != null) mListener.result(BUTTON_BACK);
         super.onBackPressed();
     }
 
