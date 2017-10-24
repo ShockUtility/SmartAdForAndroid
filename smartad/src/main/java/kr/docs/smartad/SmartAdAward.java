@@ -193,7 +193,7 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
     // 반환 인터페이스 *********************************************************************************
 
     public interface OnSmartAdAwardListener {
-        void onSmartAdAwardDone(int type, boolean isAwardShown, boolean isAwardClicked);
-        void onSmartAdAwardFail(int type);
+        void onSmartAdAwardDone(int adType, boolean isAwardShown, boolean isAwardClicked);
+        void onSmartAdAwardFail(int adType);
     }
 }
