@@ -102,6 +102,12 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if(mListener != null) mListener.result(BUTTON_CANCEL);
+        super.onBackPressed();
+    }
+
     public SmartAdAlert(Context context,
                         @SmartAd.SmartAdType int adOrder, String googleID, String facebookID,
                         String title, String action1Title, String action2Title,
