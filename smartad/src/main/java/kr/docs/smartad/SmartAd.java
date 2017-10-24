@@ -24,10 +24,13 @@ public class SmartAd {
     static final public int AD_TYPE_FACEBOOK = 2;
 
     @IntDef({AD_TYPE_GOOGLE, AD_TYPE_FACEBOOK})
-    public @interface SmartAdTestType {}
+    public @interface SmartAdType {}
 
     @IntDef({AD_TYPE_RANDOM, AD_TYPE_GOOGLE, AD_TYPE_FACEBOOK})
-    public @interface SmartAdType {}
+    public @interface SmartAdOrder {}
+
+    @IntDef({AD_TYPE_PASS, AD_TYPE_GOOGLE, AD_TYPE_FACEBOOK})
+    public @interface SmartAdResult {}
 
     static private List<String> mGoogleTestDevices = new ArrayList<String>();
 
@@ -44,7 +47,7 @@ public class SmartAd {
         return true;
     }
 
-    static public void addTestDevice(@SmartAdTestType int type, String id) {
+    static public void addTestDevice(@SmartAdType int type, String id) {
         switch (type) {
             case AD_TYPE_GOOGLE:
                 mGoogleTestDevices.add(id);
@@ -74,7 +77,7 @@ public class SmartAd {
         return alert.show();
     }
 
-    static public @SmartAdType int randomAdType() {
+    static public @SmartAdType int randomAdOrder() {
         return (new Random()).nextBoolean() ? AD_TYPE_GOOGLE : AD_TYPE_FACEBOOK;
     }
 

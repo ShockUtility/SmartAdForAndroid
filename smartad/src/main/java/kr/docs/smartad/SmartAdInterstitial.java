@@ -1,6 +1,7 @@
 package kr.docs.smartad;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * Created by shock on 2017. 8. 30..
@@ -14,21 +15,24 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     private String                                    mGoogleID;
     private String                                    mFacebookID;
 
-    @SmartAd.SmartAdType
+    @SmartAd.SmartAdOrder
     private int                                       mAdOrder = SmartAd.AD_TYPE_RANDOM;
 
     private com.google.android.gms.ads.InterstitialAd mGoogleAd;
     private com.facebook.ads.InterstitialAd           mFacebookAd;
 
-    public SmartAdInterstitial(Context context, Object callback, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID, boolean isAutoStart) {
-        if (callback instanceof OnSmartAdInterstitialListener) {
-            mListener = (OnSmartAdInterstitialListener) callback;
+    public SmartAdInterstitial(Context context, @SmartAd.SmartAdOrder int adOrder,
+                               String googleID, String facebookID, boolean isAutoStart,
+                               final OnSmartAdInterstitialListener callback)
+    {
+        if (callback != null) {
+            mListener = callback;
         } else if (context instanceof OnSmartAdInterstitialListener) {
             mListener = (OnSmartAdInterstitialListener) context;
         }
 
         this.mContext = context;
-        this.mAdOrder = (adOrder==SmartAd.AD_TYPE_RANDOM) ? SmartAd.randomAdType() : adOrder;
+        this.mAdOrder = (adOrder==SmartAd.AD_TYPE_RANDOM) ? SmartAd.randomAdOrder() : adOrder;
         this.mGoogleID = googleID;
         this.mFacebookID = facebookID;
         this.mIsAutoStart = isAutoStart;
@@ -49,12 +53,17 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     }
 
     public void showLoadedAd() {
-        if ((mGoogleAd!=null) && (mGoogleAd.isLoaded())) {
-            mGoogleAd.show();
-            onDone(SmartAd.AD_TYPE_GOOGLE);
-        } else if ((mFacebookAd!=null) && (mFacebookAd.isAdLoaded())) {
-            mFacebookAd.show();
-            onDone(SmartAd.AD_TYPE_FACEBOOK);
+        if (SmartAd.IsShowAd(this)) {
+            if ((mGoogleAd != null) && (mGoogleAd.isLoaded())) {
+                mGoogleAd.show();
+                onDone(SmartAd.AD_TYPE_GOOGLE);
+            } else if ((mFacebookAd != null) && (mFacebookAd.isAdLoaded())) {
+                mFacebookAd.show();
+                onDone(SmartAd.AD_TYPE_FACEBOOK);
+            }
+        } else {
+            onDone(SmartAd.AD_TYPE_PASS);
+            destroy();
         }
     }
 
@@ -71,32 +80,39 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         mListener = null;
     }
 
-    static public SmartAdInterstitial showAdWidthCallback(Context context, Object callback, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID, boolean isAutoStart) {
-        SmartAdInterstitial ad = new SmartAdInterstitial(context, callback, adOrder, googleID, facebookID, isAutoStart);
+    static public SmartAdInterstitial showAdWidthCallback(Context context, @SmartAd.SmartAdOrder int adOrder,
+                                                          String googleID, String facebookID, boolean isAutoStart,
+                                                          final OnSmartAdInterstitialListener callback)
+    {
+        SmartAdInterstitial ad = new SmartAdInterstitial(context, adOrder, googleID, facebookID, isAutoStart, callback);
         return ad;
     }
 
-    static public SmartAdInterstitial showAdWidthCallback(Context context, Object callback, String googleID, String facebookID) {
-        return SmartAdInterstitial.showAdWidthCallback(context, callback, SmartAd.AD_TYPE_RANDOM, googleID, facebookID, true);
+    static public SmartAdInterstitial showAdWidthCallback(Context context, String googleID, String facebookID,
+                                                          final OnSmartAdInterstitialListener callback)
+    {
+        return SmartAdInterstitial.showAdWidthCallback(context, SmartAd.AD_TYPE_RANDOM, googleID, facebookID, true, callback);
     }
 
-    static public SmartAdInterstitial showAd(Context context, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID, boolean isAutoStart) {
-        return SmartAdInterstitial.showAdWidthCallback(context, null, adOrder, googleID, facebookID, isAutoStart);
+    static public SmartAdInterstitial showAd(Context context, @SmartAd.SmartAdOrder int adOrder, String googleID,
+                                             String facebookID, boolean isAutoStart)
+    {
+        return SmartAdInterstitial.showAdWidthCallback(context, adOrder, googleID, facebookID, isAutoStart, null);
     }
 
     static public SmartAdInterstitial showAd(Context context, String googleID, String facebookID) {
-        return SmartAdInterstitial.showAdWidthCallback(context, null, SmartAd.AD_TYPE_RANDOM, googleID, facebookID, true);
+        return SmartAdInterstitial.showAd(context, SmartAd.AD_TYPE_RANDOM, googleID, facebookID, true);
     }
 
-    private void onDone(int type) {
+    private void onDone(@SmartAd.SmartAdResult int type) {
         if (mListener!=null) {
             mListener.onSmartAdInterstitialDone(type);
         }
     }
 
-    private void onFail(String lastError) {
+    private void onFail(@SmartAd.SmartAdResult int type) {
         if (mListener!=null) {
-            mListener.onSmartAdInterstitialFail(lastError);
+            mListener.onSmartAdInterstitialFail(type);
             destroy();
         }
     }
@@ -111,7 +127,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
             mGoogleAd.loadAd(SmartAd.getGoogleAdRequest());
         } else {
             if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) loadFacebook();
-            else onFail("SmartAd Error : Don't have google id!");
+            else onFail(SmartAd.AD_TYPE_GOOGLE);
         }
     }
 
@@ -126,16 +142,17 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         @Override
         public void onAdFailedToLoad(int i) {
             super.onAdFailedToLoad(i);
+            Log.e("SmartAd", "SmartAdInterstitial : type = Google, error code = "+i);
             mGoogleAd = null;
 
             if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) loadFacebook();
-            else onFail("SmartAd Error : type=Google, message="+i);
+            else onFail(SmartAd.AD_TYPE_GOOGLE);
         }
 
         @Override
         public void onAdClosed() {
             super.onAdClosed();
-            if (mListener!=null) mListener.onSmartAdInterstitialClose();
+            if (mListener!=null) mListener.onSmartAdInterstitialClose(SmartAd.AD_TYPE_GOOGLE);
             destroy();
         }
     };
@@ -149,7 +166,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
             mFacebookAd.loadAd();
         } else {
             if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) loadGoogle();
-            else onFail("SmartAd Error : Don't have facebook id!");
+            else onFail(SmartAd.AD_TYPE_FACEBOOK);
         }
     }
 
@@ -160,18 +177,20 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
 
     @Override
     public void onError(com.facebook.ads.Ad ad, com.facebook.ads.AdError adError) {
+        Log.e("SmartAd", "SmartAdInterstitial : type = Facebook, error code = "+adError.getErrorCode()+", error message = "+adError.getErrorMessage());
+
         ad.destroy();
         mFacebookAd.destroy();
         mFacebookAd = null;
 
         if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) loadGoogle();
-        else onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());
+        else onFail(SmartAd.AD_TYPE_FACEBOOK);
     }
 
     @Override
     public void onInterstitialDismissed(com.facebook.ads.Ad ad) {
         ad.destroy();
-        if (mListener!=null) mListener.onSmartAdInterstitialClose();
+        if (mListener!=null) mListener.onSmartAdInterstitialClose(SmartAd.AD_TYPE_FACEBOOK);
         destroy();
     }
 
@@ -182,8 +201,8 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     // 반환 인터페이스 *********************************************************************************
 
     public interface OnSmartAdInterstitialListener {
-        void onSmartAdInterstitialDone(int type);
-        void onSmartAdInterstitialFail(String lastError);
-        void onSmartAdInterstitialClose();
+        void onSmartAdInterstitialDone(int adType);
+        void onSmartAdInterstitialFail(int adType);
+        void onSmartAdInterstitialClose(int adType);
     }
 }

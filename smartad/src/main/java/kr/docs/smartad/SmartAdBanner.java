@@ -23,7 +23,7 @@ public class SmartAdBanner extends LinearLayout {
     private String                              mFacebookID;
     private boolean                             mIsLoadedLayout = false;
 
-    @SmartAd.SmartAdType
+    @SmartAd.SmartAdOrder
     private int                                 mAdOrder = SmartAd.AD_TYPE_RANDOM;
 
     private com.google.android.gms.ads.AdView   mGoogleAdView;
@@ -58,7 +58,7 @@ public class SmartAdBanner extends LinearLayout {
         mFacebookID    = types.getString(R.styleable.SmartAdBanner_adv_FacebookID);
 
         switch (types.getInt(R.styleable.SmartAdBanner_adv_AdOrder, SmartAd.AD_TYPE_RANDOM)) {
-            case SmartAd.AD_TYPE_RANDOM  : mAdOrder = SmartAd.randomAdType();   break;
+            case SmartAd.AD_TYPE_RANDOM  : mAdOrder = SmartAd.randomAdOrder();   break;
             case SmartAd.AD_TYPE_GOOGLE  : mAdOrder = SmartAd.AD_TYPE_GOOGLE;   break;
             case SmartAd.AD_TYPE_FACEBOOK: mAdOrder = SmartAd.AD_TYPE_FACEBOOK; break;
         }
@@ -70,7 +70,7 @@ public class SmartAdBanner extends LinearLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        // 뷰가 로드되고 레이아웃이 처음 적용되어 사이즈가 처음 조정 되었을때 베너 호출을 시작한다.
+        // 뷰가 로드되고 레이아웃이 처음 적용되어 사이즈가 처음 조정 되었을때 베너 최소 크기에 대한 경고 메세지를 표시
         if (mIsAutoStart) {
             try {
                 if (!mIsLoadedLayout && w > 0) {
@@ -81,7 +81,7 @@ public class SmartAdBanner extends LinearLayout {
                     if (((mAdSize == AD_SIZE_RECTANGLE) && (widthPX < 300.0)) ||
                         ((mAdSize != AD_SIZE_RECTANGLE) && (widthPX < 320.0)))
                     {
-                        Log.d("SmartAd",
+                        Log.w("SmartAd",
                                 "There is a problem with the width for displaying the ad!\n"+
                                 "   - AD_SIZE_AUTO      : Min 320dp\n"+
                                 "   - AD_SIZE_SMALL     : Min 320dp\n"+
@@ -105,9 +105,9 @@ public class SmartAdBanner extends LinearLayout {
         } else onDone(SmartAd.AD_TYPE_PASS);
     }
 
-    public void showAd(int adSize, @SmartAd.SmartAdType int adOrder, String googleID, String facebookID) {
+    public void showAd(int adSize, @SmartAd.SmartAdOrder int adOrder, String googleID, String facebookID) {
         this.mAdSize = adSize;
-        this.mAdOrder = (adOrder == SmartAd.AD_TYPE_RANDOM) ? SmartAd.randomAdType() : adOrder;
+        this.mAdOrder = (adOrder == SmartAd.AD_TYPE_RANDOM) ? SmartAd.randomAdOrder() : adOrder;
         this.mGoogleID = googleID;
         this.mFacebookID = facebookID;
 
@@ -118,16 +118,16 @@ public class SmartAdBanner extends LinearLayout {
         mListener = listener;
     }
 
-    private void onDone(int type) {
+    private void onDone(@SmartAd.SmartAdResult int type) {
         if (mListener!=null) {
             mListener.onSmartAdBannerDone(type);
             mListener = null;
         }
     }
 
-    private void onFail(String lastError) {
+    private void onFail(@SmartAd.SmartAdResult int type) {
         if (mListener!=null) {
-            mListener.onSmartAdBannerFail(lastError);
+            mListener.onSmartAdBannerFail(type);
             mListener = null;
         }
     }
@@ -154,7 +154,7 @@ public class SmartAdBanner extends LinearLayout {
             mGoogleAdView.loadAd(SmartAd.getGoogleAdRequest());
         } else {
             if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) showFacebook();
-            else onFail("SmartAd Error : Don't have google id!");
+            else onFail(SmartAd.AD_TYPE_GOOGLE);
         }
     }
 
@@ -177,6 +177,7 @@ public class SmartAdBanner extends LinearLayout {
         @Override
         public void onAdFailedToLoad(int i) {
             super.onAdFailedToLoad(i);
+            Log.e("SmartAd", "SmartAdBanner : type = Google, error code = "+i);
 
             if (mGoogleAdView!=null) {
                 SmartAdBanner.this.removeView(mGoogleAdView);
@@ -184,7 +185,7 @@ public class SmartAdBanner extends LinearLayout {
             }
 
             if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) showFacebook();
-            else onFail("SmartAd Error : type=Google, message="+i);
+            else onFail(SmartAd.AD_TYPE_GOOGLE);
         }
     };
 
@@ -203,7 +204,7 @@ public class SmartAdBanner extends LinearLayout {
             mFacebookAdView.loadAd();
         } else {
             if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) showGoogle();
-            else onFail("SmartAd Error : Don't have facebook id!");
+            else onFail(SmartAd.AD_TYPE_FACEBOOK);
         }
     }
 
@@ -224,13 +225,15 @@ public class SmartAdBanner extends LinearLayout {
 
         @Override
         public void onError(com.facebook.ads.Ad ad, com.facebook.ads.AdError adError) {
+            Log.e("SmartAd", "SmartAdBanner : type = Facebook, error code = "+adError.getErrorCode()+", error message = "+adError.getErrorMessage());
+
             if (mFacebookAdView!=null) {
                 SmartAdBanner.this.removeView(mFacebookAdView);
                 mFacebookAdView = null;
             }
 
             if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) showGoogle();
-            else onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());
+            else onFail(SmartAd.AD_TYPE_FACEBOOK);
         }
 
         @Override public void onAdClicked(com.facebook.ads.Ad ad) {}
@@ -240,7 +243,7 @@ public class SmartAdBanner extends LinearLayout {
     // Callback Listener ***************************************************************************
 
     public interface OnSmartAdBannerListener {
-        void onSmartAdBannerDone(int type);
-        void onSmartAdBannerFail(String lastError);
+        void onSmartAdBannerDone(int adType);
+        void onSmartAdBannerFail(int adType);
     }
 }
