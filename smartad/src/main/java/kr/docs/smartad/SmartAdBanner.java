@@ -141,13 +141,14 @@ public class SmartAdBanner extends LinearLayout {
 
     private void showGoogle() {
         if (mGoogleID != null) {
-            if (mGoogleAdView == null) {
-                mGoogleAdView = new com.google.android.gms.ads.AdView(getContext());
-                this.addView(mGoogleAdView);
-            } else mGoogleAdView.setVisibility(VISIBLE);
+            if (mGoogleAdView != null) {
+                this.removeView(mGoogleAdView);
+                mGoogleAdView = null;
+            }
 
+            mGoogleAdView = new com.google.android.gms.ads.AdView(getContext());
+            this.addView(mGoogleAdView);
             mGoogleAdView.setAdSize(getGoogleAdSize());
-
             mGoogleAdView.setAdUnitId(mGoogleID);
             mGoogleAdView.setAdListener(mGoogleListener);
             mGoogleAdView.loadAd(SmartAd.getGoogleAdRequest());
@@ -177,7 +178,10 @@ public class SmartAdBanner extends LinearLayout {
         public void onAdFailedToLoad(int i) {
             super.onAdFailedToLoad(i);
 
-            if (mGoogleAdView!=null) mGoogleAdView.setVisibility(GONE);
+            if (mGoogleAdView!=null) {
+                SmartAdBanner.this.removeView(mGoogleAdView);
+                mGoogleAdView = null;
+            }
 
             if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) showFacebook();
             else onFail("SmartAd Error : type=Google, message="+i);
@@ -188,11 +192,13 @@ public class SmartAdBanner extends LinearLayout {
 
     private void showFacebook() {
         if (mFacebookID != null) {
-            if (mFacebookAdView == null) {
-                mFacebookAdView = new com.facebook.ads.AdView(getContext(), mFacebookID, getFacebookAdSize());
-                this.addView(mFacebookAdView);
-            } else mFacebookAdView.setVisibility(VISIBLE);
+            if (mFacebookAdView != null) {
+                this.removeView(mFacebookAdView);
+                mFacebookAdView = null;
+            }
 
+            mFacebookAdView = new com.facebook.ads.AdView(getContext(), mFacebookID, getFacebookAdSize());
+            this.addView(mFacebookAdView);
             mFacebookAdView.setAdListener(mFacebookListener);
             mFacebookAdView.loadAd();
         } else {
@@ -218,7 +224,10 @@ public class SmartAdBanner extends LinearLayout {
 
         @Override
         public void onError(com.facebook.ads.Ad ad, com.facebook.ads.AdError adError) {
-            if (mFacebookAdView!=null) mFacebookAdView.setVisibility(GONE);
+            if (mFacebookAdView!=null) {
+                SmartAdBanner.this.removeView(mFacebookAdView);
+                mFacebookAdView = null;
+            }
 
             if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) showGoogle();
             else onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());
