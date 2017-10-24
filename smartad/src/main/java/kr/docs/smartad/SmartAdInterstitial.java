@@ -135,6 +135,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         @Override
         public void onAdClosed() {
             super.onAdClosed();
+            if (mListener!=null) mListener.onSmartAdInterstitialClose();
             destroy();
         }
     };
@@ -170,6 +171,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     @Override
     public void onInterstitialDismissed(com.facebook.ads.Ad ad) {
         ad.destroy();
+        if (mListener!=null) mListener.onSmartAdInterstitialClose();
         destroy();
     }
 
@@ -182,5 +184,6 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     public interface OnSmartAdInterstitialListener {
         void onSmartAdInterstitialDone(int type);
         void onSmartAdInterstitialFail(String lastError);
+        void onSmartAdInterstitialClose();
     }
 }
