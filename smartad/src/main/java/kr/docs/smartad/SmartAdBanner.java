@@ -141,8 +141,11 @@ public class SmartAdBanner extends LinearLayout {
 
     private void showGoogle() {
         if (mGoogleID != null) {
-            mGoogleAdView = new com.google.android.gms.ads.AdView(getContext());
-            this.addView(mGoogleAdView);
+            if (mGoogleAdView == null) {
+                mGoogleAdView = new com.google.android.gms.ads.AdView(getContext());
+                this.addView(mGoogleAdView);
+            } else mGoogleAdView.setVisibility(VISIBLE);
+
             mGoogleAdView.setAdSize(getGoogleAdSize());
 
             mGoogleAdView.setAdUnitId(mGoogleID);
@@ -185,8 +188,10 @@ public class SmartAdBanner extends LinearLayout {
 
     private void showFacebook() {
         if (mFacebookID != null) {
-            mFacebookAdView = new com.facebook.ads.AdView(getContext(), mFacebookID, getFacebookAdSize());
-            this.addView(mFacebookAdView);
+            if (mFacebookAdView == null) {
+                mFacebookAdView = new com.facebook.ads.AdView(getContext(), mFacebookID, getFacebookAdSize());
+                this.addView(mFacebookAdView);
+            } else mFacebookAdView.setVisibility(VISIBLE);
 
             mFacebookAdView.setAdListener(mFacebookListener);
             mFacebookAdView.loadAd();
