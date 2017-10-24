@@ -199,6 +199,6 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     // Callback Listener ***************************************************************************
 
     public interface SmartAdAlertListener {
-        void result(@SmartAdAlertButton int buttonType);
+        void result(int buttonType);
     }
 }
