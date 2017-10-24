@@ -37,6 +37,10 @@ public class SmartAdBanner extends LinearLayout {
         super(context);
         this.setOrientation(LinearLayout.VERTICAL);
 
+        if (context instanceof OnSmartAdBannerListener) {
+            mListener = (OnSmartAdBannerListener) context;
+        }
+
         mAdSize         = AD_SIZE_SMALL;
         mGoogleID       = null;
         mFacebookID     = null;
@@ -45,6 +49,10 @@ public class SmartAdBanner extends LinearLayout {
     public SmartAdBanner(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setOrientation(LinearLayout.VERTICAL);
+
+        if (context instanceof OnSmartAdBannerListener) {
+            mListener = (OnSmartAdBannerListener) context;
+        }
 
         TypedArray types = context.obtainStyledAttributes(attrs, R.styleable.SmartAdBanner);
 
