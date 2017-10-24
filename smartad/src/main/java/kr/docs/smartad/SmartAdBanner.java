@@ -181,6 +181,7 @@ public class SmartAdBanner extends LinearLayout {
 
             if (mGoogleAdView!=null) {
                 SmartAdBanner.this.removeView(mGoogleAdView);
+                mGoogleAdView.destroy();
                 mGoogleAdView = null;
             }
 
@@ -229,6 +230,7 @@ public class SmartAdBanner extends LinearLayout {
 
             if (mFacebookAdView!=null) {
                 SmartAdBanner.this.removeView(mFacebookAdView);
+                mFacebookAdView.destroy();
                 mFacebookAdView = null;
             }
 
