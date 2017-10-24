@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.IntDef;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,8 +16,11 @@ import android.widget.TextView;
 
 public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBannerListener {
 
-    static public final int BUTTON_1 = 1;
-    static public final int BUTTON_2 = 2;
+    static public final int BUTTON_OK       = 1;
+    static public final int BUTTON_CANCEL   = 2;
+
+    @IntDef({BUTTON_OK, BUTTON_CANCEL})
+    public @interface SmartAdAlertButton {}
 
     private SmartAdAlertListener            mListener;
     private int                             mAdSize;
@@ -32,7 +36,7 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     private ProgressBar                     mLoading;
     private TextView                        mBtnAction1;
     private TextView                        mBtnAction2;
-    private long                            mAalertButtonDelayMilliseconds = 3000;
+    private long                            mAalertButtonDelayMilliseconds = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,7 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
         mBtnAction1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mListener!=null) mListener.result(BUTTON_1);
+                if(mListener!=null) mListener.result(BUTTON_OK);
                 dismiss();
             }
         });
@@ -82,7 +86,7 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
             mBtnAction2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(mListener!=null) mListener.result(BUTTON_2);
+                    if(mListener!=null) mListener.result(BUTTON_CANCEL);
                     dismiss();
                 }
             });
@@ -188,6 +192,6 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     // Callback Listener ***************************************************************************
 
     public interface SmartAdAlertListener {
-        void result(int buttonIndex);
+        void result(@SmartAdAlertButton int buttonType);
     }
 }

@@ -38,7 +38,7 @@ publish {
     userOrg = properties.getProperty("bintray.user")
     groupId = 'kr.docs'
     artifactId = 'smart-ad'
-    publishVersion = '0.0.3'
+    publishVersion = '0.0.4'
     desc = 'Smart Ad with AdMob &amp; Audience Network'
     website = 'https://github.com/ShockUtility/SmartAdForAndroid'
     issueTracker = "https://github.com/ShockUtility/SmartAdForAndroid/issues"
