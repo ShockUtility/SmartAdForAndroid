@@ -104,10 +104,15 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     // 구글 *****************************************************************************************
 
     private void loadGoogle() {
-        mGoogleAd = new com.google.android.gms.ads.InterstitialAd(mContext);
-        mGoogleAd.setAdUnitId(mGoogleID);
-        mGoogleAd.setAdListener(mGoogleListener);
-        mGoogleAd.loadAd(SmartAd.getGoogleAdRequest());
+        if (mGoogleID != null) {
+            mGoogleAd = new com.google.android.gms.ads.InterstitialAd(mContext);
+            mGoogleAd.setAdUnitId(mGoogleID);
+            mGoogleAd.setAdListener(mGoogleListener);
+            mGoogleAd.loadAd(SmartAd.getGoogleAdRequest());
+        } else {
+            if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) loadFacebook();
+            else onFail("SmartAd Error : Don't have google id!");
+        }
     }
 
     private com.google.android.gms.ads.AdListener mGoogleListener = new com.google.android.gms.ads.AdListener() {
@@ -137,9 +142,14 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
     // 페이스북 **************************************************************************************
 
     private void loadFacebook() {
-        mFacebookAd = new com.facebook.ads.InterstitialAd(mContext, mFacebookID);
-        mFacebookAd.setAdListener(this);
-        mFacebookAd.loadAd();
+        if (mFacebookID != null) {
+            mFacebookAd = new com.facebook.ads.InterstitialAd(mContext, mFacebookID);
+            mFacebookAd.setAdListener(this);
+            mFacebookAd.loadAd();
+        } else {
+            if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) loadGoogle();
+            else onFail("SmartAd Error : Don't have facebook id!");
+        }
     }
 
     @Override

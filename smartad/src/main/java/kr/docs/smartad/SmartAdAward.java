@@ -91,9 +91,14 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
     // 구글 *****************************************************************************************
 
     private void showGoogle() {
-        mGoogleAd = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(mContext);
-        mGoogleAd.setRewardedVideoAdListener(this);
-        mGoogleAd.loadAd(mGoogleID, SmartAd.getGoogleAdRequest());
+        if (mGoogleID != null) {
+            mGoogleAd = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(mContext);
+            mGoogleAd.setRewardedVideoAdListener(this);
+            mGoogleAd.loadAd(mGoogleID, SmartAd.getGoogleAdRequest());
+        } else {
+            if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) showFacebook();
+            else onFail("SmartAd Error : Don't have google id!");
+        }
     }
 
     @Override
@@ -131,9 +136,14 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
     // 페이스북 : 아직 국내에 보상 광고가 들어오지 않았다 ******************************************************
 
     private void showFacebook() {
-        mFacebookAd = new com.facebook.ads.RewardedVideoAd(mContext, "YOUR_PLACEMENT_ID");
-        mFacebookAd.setAdListener(this);
-        mFacebookAd.loadAd();
+        if (mFacebookID != null) {
+            mFacebookAd = new com.facebook.ads.RewardedVideoAd(mContext, mFacebookID);
+            mFacebookAd.setAdListener(this);
+            mFacebookAd.loadAd();
+        } else {
+            if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) showGoogle();
+            else onFail("SmartAd Error : Don't have facebook id!");
+        }
     }
 
     @Override

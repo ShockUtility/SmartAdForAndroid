@@ -140,13 +140,18 @@ public class SmartAdBanner extends LinearLayout {
     // Google **************************************************************************************
 
     private void showGoogle() {
-        mGoogleAdView = new com.google.android.gms.ads.AdView(getContext());
-        this.addView(mGoogleAdView);
-        mGoogleAdView.setAdSize(getGoogleAdSize());
+        if (mGoogleID != null) {
+            mGoogleAdView = new com.google.android.gms.ads.AdView(getContext());
+            this.addView(mGoogleAdView);
+            mGoogleAdView.setAdSize(getGoogleAdSize());
 
-        mGoogleAdView.setAdUnitId(mGoogleID);
-        mGoogleAdView.setAdListener(mGoogleListener);
-        mGoogleAdView.loadAd(SmartAd.getGoogleAdRequest());
+            mGoogleAdView.setAdUnitId(mGoogleID);
+            mGoogleAdView.setAdListener(mGoogleListener);
+            mGoogleAdView.loadAd(SmartAd.getGoogleAdRequest());
+        } else {
+            if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) showFacebook();
+            else onFail("SmartAd Error : Don't have google id!");
+        }
     }
 
     private com.google.android.gms.ads.AdSize getGoogleAdSize() {
@@ -179,11 +184,16 @@ public class SmartAdBanner extends LinearLayout {
     // Facebook ************************************************************************************
 
     private void showFacebook() {
-        mFacebookAdView = new com.facebook.ads.AdView(getContext(), mFacebookID, getFacebookAdSize());
-        this.addView(mFacebookAdView);
+        if (mFacebookID != null) {
+            mFacebookAdView = new com.facebook.ads.AdView(getContext(), mFacebookID, getFacebookAdSize());
+            this.addView(mFacebookAdView);
 
-        mFacebookAdView.setAdListener(mFacebookListener);
-        mFacebookAdView.loadAd();
+            mFacebookAdView.setAdListener(mFacebookListener);
+            mFacebookAdView.loadAd();
+        } else {
+            if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) showGoogle();
+            else onFail("SmartAd Error : Don't have facebook id!");
+        }
     }
 
     private com.facebook.ads.AdSize getFacebookAdSize() {
