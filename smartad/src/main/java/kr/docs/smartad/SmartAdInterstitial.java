@@ -110,7 +110,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
             mGoogleAd.setAdListener(mGoogleListener);
             mGoogleAd.loadAd(SmartAd.getGoogleAdRequest());
         } else {
-            if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) loadFacebook();
+            if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) loadFacebook();
             else onFail("SmartAd Error : Don't have google id!");
         }
     }
@@ -128,7 +128,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
             super.onAdFailedToLoad(i);
             mGoogleAd = null;
 
-            if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) loadFacebook();
+            if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) loadFacebook();
             else onFail("SmartAd Error : type=Google, message="+i);
         }
 
@@ -147,7 +147,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
             mFacebookAd.setAdListener(this);
             mFacebookAd.loadAd();
         } else {
-            if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) loadGoogle();
+            if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) loadGoogle();
             else onFail("SmartAd Error : Don't have facebook id!");
         }
     }
@@ -163,7 +163,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         mFacebookAd.destroy();
         mFacebookAd = null;
 
-        if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) loadGoogle();
+        if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) loadGoogle();
         else onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());
     }
 

@@ -149,7 +149,7 @@ public class SmartAdBanner extends LinearLayout {
             mGoogleAdView.setAdListener(mGoogleListener);
             mGoogleAdView.loadAd(SmartAd.getGoogleAdRequest());
         } else {
-            if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) showFacebook();
+            if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) showFacebook();
             else onFail("SmartAd Error : Don't have google id!");
         }
     }
@@ -174,10 +174,10 @@ public class SmartAdBanner extends LinearLayout {
         public void onAdFailedToLoad(int i) {
             super.onAdFailedToLoad(i);
 
-            if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) {
-                if (mGoogleAdView!=null) mGoogleAdView.setVisibility(GONE);
-                showFacebook();
-            } else onFail("SmartAd Error : type=Google, message="+i);
+            if (mGoogleAdView!=null) mGoogleAdView.setVisibility(GONE);
+
+            if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) showFacebook();
+            else onFail("SmartAd Error : type=Google, message="+i);
         }
     };
 
@@ -191,7 +191,7 @@ public class SmartAdBanner extends LinearLayout {
             mFacebookAdView.setAdListener(mFacebookListener);
             mFacebookAdView.loadAd();
         } else {
-            if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) showGoogle();
+            if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) showGoogle();
             else onFail("SmartAd Error : Don't have facebook id!");
         }
     }
@@ -213,10 +213,10 @@ public class SmartAdBanner extends LinearLayout {
 
         @Override
         public void onError(com.facebook.ads.Ad ad, com.facebook.ads.AdError adError) {
-            if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) {
-                if (mFacebookAdView!=null) mFacebookAdView.setVisibility(GONE);
-                showGoogle();
-            } else onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());
+            if (mFacebookAdView!=null) mFacebookAdView.setVisibility(GONE);
+
+            if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) showGoogle();
+            else onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());
         }
 
         @Override public void onAdClicked(com.facebook.ads.Ad ad) {}

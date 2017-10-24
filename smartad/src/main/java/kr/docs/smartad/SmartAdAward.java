@@ -96,7 +96,7 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
             mGoogleAd.setRewardedVideoAdListener(this);
             mGoogleAd.loadAd(mGoogleID, SmartAd.getGoogleAdRequest());
         } else {
-            if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) showFacebook();
+            if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) showFacebook();
             else onFail("SmartAd Error : Don't have google id!");
         }
     }
@@ -109,9 +109,8 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) { // 광고 로딩 실패
-        if (mAdOrder == SmartAd.AD_TYPE_GOOGLE) {
-            showFacebook();
-        } else {
+        if ((mAdOrder == SmartAd.AD_TYPE_GOOGLE) && (mFacebookID != null)) showFacebook();
+        else {
             if (mLoadingAlert!=null) mLoadingAlert.dismiss();
             onFail("SmartAd Error : type=Google, message="+i);
         }
@@ -141,7 +140,7 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
             mFacebookAd.setAdListener(this);
             mFacebookAd.loadAd();
         } else {
-            if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) showGoogle();
+            if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) showGoogle();
             else onFail("SmartAd Error : Don't have facebook id!");
         }
     }
@@ -154,9 +153,8 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
 
     @Override
     public void onError(com.facebook.ads.Ad ad, com.facebook.ads.AdError adError) {
-        if (mAdOrder == SmartAd.AD_TYPE_FACEBOOK) {
-            showGoogle();
-        } else {
+        if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) showGoogle();
+        else {
             if (mLoadingAlert!=null) mLoadingAlert.dismiss();
             onFail("SmartAd Error : type=Facebook, message="+adError.getErrorMessage());
         }
