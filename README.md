@@ -11,7 +11,7 @@ SmartAd 는 iOS 와 Android 에서 AdMob 과 Audience Network 광고 프레임�
 # 설치
 ```java
 dependencies {
-    compile 'kr.docs:smart-ad:0.1.8'
+    compile 'kr.docs:smart-ad:0.1.9'
 } 
 ```
 
@@ -51,14 +51,12 @@ UI 화면에 뷰를 추가하고 'SmartAdBanner' 클래스를 선택한 후 5개
 />
 ```
 
-
-
-| SmartAdBanner              | Google (AdView)                                                                          | Facebook (AdView)                                    |
-|-----------------------------|-------------------------------------------------------------------------|------------------------------------------------|
-| AD_SIZE_AUTO              | SMART_BANNER  (280&#126;1200 x 80&#126;612)                  | auto width x BANNER_HEIGHT_50          |
-| AD_SIZE_SMALL            | BANNER  (280&#126;1200 x 132&#126;1200)                            | auto width x BANNER_HEIGHT_50          |
-| AD_SIZE_LARGE            | LARGE_BANNER    (280&#126;1200 x 250&#126;1200)            | auto width x BANNER_HEIGHT_90           |
-| AD_SIZE_RECTANGLE   | MEDIUM_RECTANGLE    (280&#126;1200 x 250&#126;1200)   | auto width x RECTANGLE_HEIGHT_250   |
+| SmartAdBanner              | Google (AdView)                 | Facebook (AdView)              |
+|-----------------------------|--------------------------------|---------------------------------|
+| AD_SIZE_AUTO              | SMART_BANNER               | BANNER_HEIGHT_50          |
+| AD_SIZE_SMALL            | BANNER                             | BANNER_HEIGHT_50          |
+| AD_SIZE_LARGE            | LARGE_BANNER               | BANNER_HEIGHT_90          |
+| AD_SIZE_RECTANGLE   | MEDIUM_RECTANGLE      | RECTANGLE_HEIGHT_250  |
 
 `* 주의 : 4가지 크기의 광고가 지원되며 뷰의 크기가 표시할 광고보다 작은 경우 각각의 프레임웍에 의해서 광고가 표시되지 않을 수 있다.`
 <br>
