@@ -37,7 +37,7 @@ dependencies {
 - InterstitialAd
 - RewardedVideoAd
 
-# 사용법
+# Usage
 
 ## SmartAdBanner
 Add the view to the UI screen, select the 'SmartAdBanner' class and set only 5 properties, and it works without coding.
