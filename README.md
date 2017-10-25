@@ -11,7 +11,7 @@ SmartAd 는 iOS 와 Android 에서 AdMob 과 Audience Network 광고 프레임�
 # 설치
 ```java
 dependencies {
-    compile 'kr.docs:smart-ad:0.0.9'
+    compile 'kr.docs:smart-ad:0.1.8'
 } 
 ```
 
@@ -32,35 +32,69 @@ dependencies {
 ## Audience Network
 - AdView (기본 베너)
 - InterstitialAd (삽입 광고)
-- RewardedVideoAd (보상 광고) *** 지원 예정 ***
+- RewardedVideoAd (보상 광고)
 
 # 사용법
 
 ## 기본 베너 (SmartAdBanner)
-![Screenshot](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/screenshot/screen_01.png?raw=true)<br>
 UI 화면에 뷰를 추가하고 'SmartAdBanner' 클래스를 선택한 후 5개의 프로퍼티만 셋팅하면 코딩 없이 바로 동작 됩니다.
 
-| SmartAdBanner     | Google (NativeExpressAdView)             | Facebook (NativeAd)       |
-|-----------------|------------------------------------------|---------------------------|
-| AD_SIZE_AUTO              | SMART_BANNER  (280&#126;1200 x 80&#126;612)     | auto width x BANNER_HEIGHT_50   |
-| AD_SIZE_SMALL            | BANNER  (280&#126;1200 x 132&#126;1200)   | auto width x BANNER_HEIGHT_50   |
-| AD_SIZE_LARGE            | LARGE_BANNER    (280&#126;1200 x 250&#126;1200)   | auto width x BANNER_HEIGHT_90   |
+```xml
+<kr.docs.smartad.SmartAdBanner
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:adv_AdOrder="Random"
+    app:adv_BannerSize="Auto"
+    app:adv_IsAutoStart="true"
+    app:adv_FacebookID="YOUR_PLACEMENT_ID"
+    app:adv_GoogleID="YOUR_PLACEMENT_ID"
+/>
+```
+
+
+
+| SmartAdBanner              | Google (AdView)                                                                          | Facebook (AdView)                                    |
+|-----------------------------|-------------------------------------------------------------------------|------------------------------------------------|
+| AD_SIZE_AUTO              | SMART_BANNER  (280&#126;1200 x 80&#126;612)                  | auto width x BANNER_HEIGHT_50          |
+| AD_SIZE_SMALL            | BANNER  (280&#126;1200 x 132&#126;1200)                            | auto width x BANNER_HEIGHT_50          |
+| AD_SIZE_LARGE            | LARGE_BANNER    (280&#126;1200 x 250&#126;1200)            | auto width x BANNER_HEIGHT_90           |
 | AD_SIZE_RECTANGLE   | MEDIUM_RECTANGLE    (280&#126;1200 x 250&#126;1200)   | auto width x RECTANGLE_HEIGHT_250   |
 
-`* 주의 : 4가지 크기의 광고가 지원되며 뷰의 크기가 광고보다 작은 경우 각각의 프레임웍에 의해서 광고가 표시되지 않을 수 있다.`
+`* 주의 : 4가지 크기의 광고가 지원되며 뷰의 크기가 표시할 광고보다 작은 경우 각각의 프레임웍에 의해서 광고가 표시되지 않을 수 있다.`
 <br>
 `* 주의 : 가급적이면 뷰의 layout_height 는 wrap_content 로 설정하고 adv_AdSize 를 알맞게 설정 한다면 각각의 프레임웍에 맞는 광고 사이즈로 표기되며 광고가 없을 경우 화면에 표기되지 않을 것입니다.`
 <br>
-`* 주의 : 광고의 넓이가 화면보다 작은 경우 구글 광고가 표시되지 않는 문제가 발생합니다. 이 경우 adv_FixedWidth 프로퍼티에 광고의 넓이를 설정하면 문제를 해결 할 수 있습니다.`
 
 ## 전면 광고 (SmartAdInterstitial)
-Activity 에서 호출하는 가장 간단한 코드는 다음과 같다.
+전면 광고 호출하는  예제 코드는 다음과 같다.
 ```java
+// Simple
 SmartAdInterstitial mAd = SmartAdInterstitial.showAd(this, "googleID", "facebookID");
+// Custom show
+SmartAdInterstitial mAd = SmartAdInterstitial.showAd(this, SmartAd.AD_TYPE_GOOGLE, "googleID", "facebookID", false);
+mAd.showLoadedAd();
+// with Callback
+SmartAdInterstitial mAd = SmartAdInterstitial.showAdWidthCallback(this, "googleID", "facebookID",
+                            new SmartAdInterstitial.OnSmartAdInterstitialListener() {
+                                @Override
+                                public void onSmartAdInterstitialDone(int adType) {
+                                    // Success...
+                                }
+
+                                @Override
+                                public void onSmartAdInterstitialFail(int adType) {
+                                    // Fail...
+                                }
+
+                                @Override
+                                public void onSmartAdInterstitialClose(int adType) {
+                                    // Close...
+                                }
+                            });
 ...
 @Override
 public void onDestroy() {
-    if (mAd!=null) mAd.destroy(); 
+    if (mAd!=null) mAd.destroy();  // 이 부분이 없을 경우 호출한 화면이 닫힌 후 다른 화면에서 광고가 표시될 수 있다.
     super.onDestroy();
 }
 ```
@@ -68,68 +102,81 @@ public void onDestroy() {
 ```java
 public class MainActivity extends AppCompatActivity implements SmartAdInterstitial.OnSmartAdInterstitialListener {
     @Override
-    public void OnSmartAdInterstitialDone(int type) {
+    public void onSmartAdInterstitialDone(int type) {
         // Success...
     }
 
     @Override
-    public void OnSmartAdInterstitialFail(String lastError) {
+    public void onSmartAdInterstitialFail(int type) {
         // Fail...
+    }
+    
+    @Override
+    public void onSmartAdInterstitialClose(int type) {
+        // Close...
     }
 }
 ```
  
 다음의 함수들을 통해서 상황에 맞는 광고 호출이 가능합니다.
 ```java
-// 초기화 이후 원하는 시점에 호출 해야 하는 경우
-public SmartAdInterstitial(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle)
-public void showAd()
-
-// 클래스에서 호출하고 콜백이 필요한 경우
-static public SmartAdInterstitial showAdWidthCallback(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle)
-static public SmartAdInterstitial showAdWidthCallback(Context context, Object callback, String googleID, String facebookID)
-
-// Activity 에서 호출하는 경우
-static public SmartAdInterstitial showAd(Context context, String googleID, String facebookID, boolean isFirstGoogle)
+static public SmartAdInterstitial showAdWidthCallback(Context context, int adOrder, String googleID, String facebookID, boolean isAutoStart, final OnSmartAdInterstitialListener callback)
+static public SmartAdInterstitial showAdWidthCallback(Context context, String googleID, String facebookID, final OnSmartAdInterstitialListener callback)
+static public SmartAdInterstitial showAd(Context context, int adOrder, String googleID, String facebookID, boolean isAutoStart)
 static public SmartAdInterstitial showAd(Context context, String googleID, String facebookID)
+
+public SmartAdInterstitial(Context context, @SmartAd.SmartAdOrder int adOrder, String googleID, String facebookID, boolean isAutoStart, final OnSmartAdInterstitialListener callback)
+public void showLoadedAd()
+public void destroy()
 ```
 
 `* 주의 : destroy() 처리를 안하는 경우 호출한 Activity 가 닫힌 후에도 광고가 호출되는 문제가 발생한다.`
 
 ## 보상 광고 (SmartAdAward)
-Activity 에서 호출하는 가장 간단한 코드는 다음과 같다.
+보상 광고 호출하는  예제 코드는 다음과 같다.
 ```java
-SmartAdAward.showAd(this, "googleID", "facebookID");
+// Simple
+SmartAdAward.showAd(this, SmartAd.AD_TYPE_FACEBOOK, "googleID", "facebookID");
+// with Callback
+SmartAdAward.showAdWidthCallback(this, SmartAd.AD_TYPE_RANDOM, "googleID", "facebookID",
+                                 new SmartAdAward.OnSmartAdAwardListener() {
+                                     @Override
+                                     public void onSmartAdAwardDone(int adType, boolean isAwardShown, boolean isAwardClicked) {
+                                         // Awarded...
+                                     }
+
+                                    @Override
+                                    public void onSmartAdAwardFail(int adType) {
+                                        // Fail...
+                                    }
+                                });
 ```
 
-보상광고의 결과값을 얻기 위해서 다음과 같은 루틴이 필요하다.
+보상 광고의 결과값을 얻기 위해서 OnSmartAdAwardListener 를 implements 한다.
 ```java
 public class MainActivity extends AppCompatActivity implements SmartAdInterstitial.OnSmartAdAwardListener {
     @Override
-    public void OnSmartAdAwardDone(int type, boolean isAward) {
-        // Awarded
+    public void onSmartAdAwardDone(int adType, boolean isAward) {
+        // Awarded...
     }
 
     @Override
-    public void OnSmartAdAwardFail(String lastError) {
-        // Not Awarded
+    public void onSmartAdAwardFail(int adType) {
+        // Fail...
     }
 }
 ```
 
 다음의 함수들을 통해서 상황에 맞는 광고 호출이 가능합니다.
 ```java
-// 초기화 이후 원하는 시점에 호출 해야 하는 경우
-public SmartAdAward(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle);
-public void showAd();
+static public SmartAdAward showAdWidthCallback(Context context, int adOrder, String googleID, String facebookID, final OnSmartAdAwardListener callback)
+static public SmartAdAward showAdWidthCallback(Context context, String googleID, String facebookID, final OnSmartAdAwardListener callback)
+static public SmartAdAward showAd(Context context, int adOrder, String googleID, String facebookID)
+static public SmartAdAward showAd(Context context, String googleID, String facebookID)
 
-// 클래스에서 호출하고 콜백이 필요한 경우
-static public void showAdWidthCallback(Context context, Object callback, String googleID, String facebookID, boolean isFirstGoogle);
-static public void showAdWidthCallback(Context context, Object callback, String googleID, String facebookID);
-
-// Activity 에서 호출하는 경우
-static public void showAd(Context context, String googleID, String facebookID, boolean isFirstGoogle);
-static public void showAd(Context context, String googleID, String facebookID);
+public SmartAdAward(Context context, @SmartAd.SmartAdOrder int adOrder, String googleID, String facebookID, final OnSmartAdAwardListener callback)
+public SmartAdAward(Context context, String googleID, String facebookID, OnSmartAdAwardListener callback)
+public void showAd()
 ```
 
 `* 주의 : 아직 Audience Network 의 보상 광고는 준비되지 않았다.`
@@ -138,53 +185,73 @@ static public void showAd(Context context, String googleID, String facebookID);
 확인 버튼만 있는 알림 얼럿
 ```java
 SmartAdAlert.alert(this,
-        "googleID",
-        "facebookID"
-        "alert title",
-        new SmartAdAlert.SmartAdAlertListener() {
-            @Override
-            public void result(int buttonIndex) {
-                if (buttonIndex==SmartAdAlert.BUTTON_1) {
-                    // Done
-                }
-            }
-        });
+                   getAdOrder(),
+                   "googleID",
+                   "facebookID",
+                   "Alert Dialog",
+                   new SmartAdAlert.SmartAdAlertListener() {
+                       @Override
+                       public void result(int buttonType) {
+                           switch (buttonType) {
+                               case SmartAdAlert.BUTTON_OK:
+                                   Toast.makeText(MainActivity.this, "SmartAdAlert Alert : OK", Toast.LENGTH_LONG).show();
+                                   break;
+                               case SmartAdAlert.BUTTON_BACK:
+                                   Toast.makeText(MainActivity.this, "SmartAdAlert Alert : Back", Toast.LENGTH_LONG).show();
+                                   break;
+                           }
+                       }
+                   });
 ```
 확인/취소 얼럿
 ```java
 SmartAdAlert.confirm(this,
-        "googleID",
-        "facebookID"
-        "alert title",
-        new SmartAdAlert.SmartAdAlertListener() {
-            @Override
-            public void result(int buttonIndex) {
-                if (buttonIndex==SmartAdAlert.BUTTON_1) {
-                    // OK
-                } else {
-                    // Cancel
-                }
-            }
-        });
+                     getAdOrder(),
+                     "googleID",
+                     "facebookID",
+                     "Confirm Dialog",
+                     new SmartAdAlert.SmartAdAlertListener() {
+                         @Override
+                         public void result(int buttonType) {
+                             switch (buttonType) {
+                                 case SmartAdAlert.BUTTON_OK:
+                                     Toast.makeText(MainActivity.this, "SmartAdAlert Confirm : OK", Toast.LENGTH_LONG).show();
+                                     break;
+                                 case SmartAdAlert.BUTTON_CANCEL:
+                                     Toast.makeText(MainActivity.this, "SmartAdAlert Confirm : Cancel", Toast.LENGTH_LONG).show();
+                                     break;
+                                 case SmartAdAlert.BUTTON_BACK:
+                                     Toast.makeText(MainActivity.this, "SmartAdAlert Confirm : Back", Toast.LENGTH_LONG).show();
+                                     break;
+                             }
+                         }
+                     });
 ```
 선택 버튼 커스터마이징 얼럿
 ```java
 SmartAdAlert.select(this,
-        "googleID",
-        "facebookID",
-        "alert title",
-        "button title 1", 
-        "button title 2", 
-        new SmartAdAlert.SmartAdAlertListener() {
-            @Override
-            public void result(int buttonIndex) {
-                if (buttonIndex==SmartAdAlert.BUTTON_1) {
-                    // button1
-                } else {
-                    // button2
-                }
-            }
-        });
+                    getAdOrder(),
+                    "googleID",
+                    "facebookID",
+                    "Select Dialog",
+                    "Yes",
+                    "No",
+                    new SmartAdAlert.SmartAdAlertListener() {
+                        @Override
+                        public void result(int buttonType) {
+                            switch (buttonType) {
+                                case SmartAdAlert.BUTTON_OK:
+                                    Toast.makeText(MainActivity.this, "SmartAdAlert Select : OK", Toast.LENGTH_LONG).show();
+                                    break;
+                                case SmartAdAlert.BUTTON_CANCEL:
+                                    Toast.makeText(MainActivity.this, "SmartAdAlert Select : Cancel", Toast.LENGTH_LONG).show();
+                                    break;
+                                case SmartAdAlert.BUTTON_BACK:
+                                    Toast.makeText(MainActivity.this, "SmartAdAlert Select : Back", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        }
+                    });
 ```
 ## 테스트 장비 추가
 ```java
@@ -195,8 +262,9 @@ SmartAdAlert.select(this,
 ```
 
 ## 광고 호출 커스텀 함수 등록
-SmartAd 의 모든 광고 모듈을 광고를 표시하기 전에 SmartAd.IsShowAdFunc 를 참조한다. IsShowAdFunc 는 기본적으로 null 이므로
-모든 광고가 표기되는데 인앱 결제나 특정 상황에서 광고를 중단 시키기 위해서 이 함수를 다음과 같이 커스터마이징 하면 광고 호출을 손쉽게 제어 할 수 있다.
+SmartAd 의 모든 광고 모듈은 광고를 표시하기 전에 SmartAd.IsShowAdFunc 를 참조한다. IsShowAdFunc 는 기본적으로 null 이므로
+모든 광고가 표기되는데 인앱 결제나 특정 상황에서 광고를 중단 시키기 위해서 이 함수를 다음과 같이 커스터마이징 하면 모든 광고 호출을
+손쉽게 차단 할 수 있다.
 ```java
 SmartAd.IsShowAdFunc = new SmartAd.IsShowAdListener() { // 광고 활성화 함수 적용
     @Override

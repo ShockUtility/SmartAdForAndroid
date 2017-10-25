@@ -40,7 +40,7 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         loadAd();
     }
 
-    public void loadAd() {
+    private void loadAd() {
         if (SmartAd.IsShowAd(this)) {
             switch (mAdOrder) {
                 case SmartAd.AD_TYPE_GOOGLE  : loadGoogle();   break;
