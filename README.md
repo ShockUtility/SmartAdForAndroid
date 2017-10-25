@@ -1,6 +1,9 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform](https://img.shields.io/badge/Platform-Android-green.svg)](https://developer.android.com)
 [![GitHub release](https://img.shields.io/github/release/ShockUtility/SmartAdForAndroid.svg)](https://github.com/ShockUtility/SmartAdForAndroid)
+[![English](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/en.png?raw=true)](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/README.md)
+[![Korea](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/kr.png?raw=true)](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/README_kr.md)
+[![Japan](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/jp.png?raw=true)](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/README_jp.md)
 
 # SmartAd
 SmartAd is an easy-to-use library for AdMob and Audience Network advertising frameworks on iOS and Android.
