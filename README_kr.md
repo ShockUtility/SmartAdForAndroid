@@ -24,12 +24,12 @@ dependencies {
 ```
 
 # 지원되는 광고 형식
-## AdMob
+## Google AdMob
 - AdView (기본 베너)
 - InterstitialAd (전면 광고)
 - RewardedVideoAd (보상 광고)
 
-## Audience Network
+## Facebook Audience Network
 - AdView (기본 베너)
 - InterstitialAd (삽입 광고)
 - RewardedVideoAd (보상 광고)
@@ -64,7 +64,7 @@ UI 화면에 뷰를 추가하고 'SmartAdBanner' 클래스를 선택한 후 5개
 <br>
 
 ## 전면 광고 (SmartAdInterstitial)
-전면 광고 호출하는  예제 코드는 다음과 같다.
+전면 광고 호출하는 예제 코드는 다음과 같다.
 ```java
 // Simple
 SmartAdInterstitial mAd = SmartAdInterstitial.showAd(this, "googleID", "facebookID");

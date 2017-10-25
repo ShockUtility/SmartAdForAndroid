@@ -2,20 +2,20 @@
 [![Platform](https://img.shields.io/badge/Platform-Android-green.svg)](https://developer.android.com)
 [![GitHub release](https://img.shields.io/github/release/ShockUtility/SmartAdForAndroid.svg)](https://github.com/ShockUtility/SmartAdForAndroid)
 
-# SmartAd 소개
-SmartAd 는 iOS 와 Android 에서 AdMob 과 Audience Network 광고 프레임웍을 간편하게 사용하기 위한 라이브러리 입니다.
+# SmartAd
+SmartAd is an easy-to-use library for AdMob and Audience Network advertising frameworks on iOS and Android.
 
 - [SmartAd for Swift](https://github.com/ShockUtility/SmartAdForSwift)
 - [SmartAd for Android](https://github.com/ShockUtility/SmartAdForAndroid) -> [Demo Project](https://github.com/ShockUtility/SmartAdDemo)
 
-# 설치
+# Install
 ```java
 dependencies {
     compile 'kr.docs:smart-ad:0.2.1'
 } 
 ```
 
-# 의존성
+# Dependencies
 ```java
 dependencies {
     compile 'com.google.android.gms:play-services-ads:11.+'
@@ -23,21 +23,21 @@ dependencies {
 } 
 ```
 
-# 지원되는 광고 형식
-## AdMob
-- AdView (기본 베너)
-- InterstitialAd (전면 광고)
-- RewardedVideoAd (보상 광고)
+# Supported ad formats
+## Google AdMob
+- AdView
+- InterstitialAd
+- RewardedVideoAd
 
-## Audience Network
-- AdView (기본 베너)
-- InterstitialAd (삽입 광고)
-- RewardedVideoAd (보상 광고)
+## Facebook Audience Network
+- AdView
+- InterstitialAd
+- RewardedVideoAd
 
 # 사용법
 
-## 기본 베너 (SmartAdBanner)
-UI 화면에 뷰를 추가하고 'SmartAdBanner' 클래스를 선택한 후 5개의 프로퍼티만 셋팅하면 코딩 없이 바로 동작 됩니다.
+## SmartAdBanner
+Add the view to the UI screen, select the 'SmartAdBanner' class and set only 5 properties, and it works without coding.
 
 ```xml
 <kr.docs.smartad.SmartAdBanner
@@ -51,20 +51,20 @@ UI 화면에 뷰를 추가하고 'SmartAdBanner' 클래스를 선택한 후 5개
 />
 ```
 
-| SmartAdBanner              | Google (AdView)                 | Facebook (AdView)              |
-|-----------------------------|--------------------------------|---------------------------------|
-| AD_SIZE_AUTO              | SMART_BANNER               | BANNER_HEIGHT_50          |
-| AD_SIZE_SMALL            | BANNER                             | BANNER_HEIGHT_50          |
-| AD_SIZE_LARGE            | LARGE_BANNER               | BANNER_HEIGHT_90          |
+| SmartAdBanner       | Google (AdView)       | Facebook (AdView)     |
+|---------------------|-----------------------|-----------------------|
+| AD_SIZE_AUTO        | SMART_BANNER          | BANNER_HEIGHT_50      |
+| AD_SIZE_SMALL       | BANNER                | BANNER_HEIGHT_50      |
+| AD_SIZE_LARGE       | LARGE_BANNER          | BANNER_HEIGHT_90      |
 | AD_SIZE_RECTANGLE   | MEDIUM_RECTANGLE      | RECTANGLE_HEIGHT_250  |
 
-`* 주의 : 4가지 크기의 광고가 지원되며 뷰의 크기가 표시할 광고보다 작은 경우 각각의 프레임웍에 의해서 광고가 표시되지 않을 수 있다.`
+`* Note: If four sizes of ads are supported and the size of the view is smaller than the size of the ads to be displayed, then each framework may not show ads.`
 <br>
-`* 주의 : 가급적이면 뷰의 layout_height 는 wrap_content 로 설정하고 adv_AdSize 를 알맞게 설정 한다면 각각의 프레임웍에 맞는 광고 사이즈로 표기되며 광고가 없을 경우 화면에 표기되지 않을 것입니다.`
+`* Note: preferably layout_height of the view is set to wrap_content and adv_AdSize is set appropriately, the ad size will be displayed for each framework, and if there is no advertisement, it will not be displayed on the screen.`
 <br>
 
-## 전면 광고 (SmartAdInterstitial)
-전면 광고 호출하는  예제 코드는 다음과 같다.
+## SmartAdInterstitial
+Here is the example code that calls the interstitial.
 ```java
 // Simple
 SmartAdInterstitial mAd = SmartAdInterstitial.showAd(this, "googleID", "facebookID");
@@ -92,11 +92,11 @@ SmartAdInterstitial mAd = SmartAdInterstitial.showAdWidthCallback(this, "googleI
 ...
 @Override
 public void onDestroy() {
-    if (mAd!=null) mAd.destroy();  // 이 부분이 없을 경우 호출한 화면이 닫힌 후 다른 화면에서 광고가 표시될 수 있다.
+    if (mAd!=null) mAd.destroy();  // This prevents ads from being displayed after the screen is closed.
     super.onDestroy();
 }
 ```
-상황에 따라 결과값을 반환 받고 싶을 경우 호출하는 클래스에 OnSmartAdInterstitialListener 를 implements 한다.
+Use OnSmartAdInterstitialListener if you want to return the result.
 ```java
 public class MainActivity extends AppCompatActivity implements SmartAdInterstitial.OnSmartAdInterstitialListener {
     @Override
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements SmartAdInterstiti
 }
 ```
  
-다음의 함수들을 통해서 상황에 맞는 광고 호출이 가능합니다.
+The following functions allow you to make ad calls.
 ```java
 static public SmartAdInterstitial showAdWidthCallback(Context context, int adOrder, String googleID, String facebookID, boolean isAutoStart, final OnSmartAdInterstitialListener callback)
 static public SmartAdInterstitial showAdWidthCallback(Context context, String googleID, String facebookID, final OnSmartAdInterstitialListener callback)
@@ -128,10 +128,10 @@ public void showLoadedAd()
 public void destroy()
 ```
 
-`* 주의 : destroy() 처리를 안하는 경우 호출한 Activity 가 닫힌 후에도 광고가 호출되는 문제가 발생한다.`
+`* Note: If you do not handle destroy (), the problem is that your ads will still be called after the calling activity has been closed.`
 
-## 보상 광고 (SmartAdAward)
-보상 광고 호출하는  예제 코드는 다음과 같다.
+## SmartAdAward
+Here is the example code that calls the award ad.
 ```java
 // Simple
 SmartAdAward.showAd(this, SmartAd.AD_TYPE_FACEBOOK, "googleID", "facebookID");
@@ -150,7 +150,7 @@ SmartAdAward.showAdWidthCallback(this, SmartAd.AD_TYPE_RANDOM, "googleID", "face
                                 });
 ```
 
-보상 광고의 결과값을 얻기 위해서 OnSmartAdAwardListener 를 implements 한다.
+Use OnSmartAdAwardListener if you want to return the result.
 ```java
 public class MainActivity extends AppCompatActivity implements SmartAdInterstitial.OnSmartAdAwardListener {
     @Override
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements SmartAdInterstiti
 }
 ```
 
-다음의 함수들을 통해서 상황에 맞는 광고 호출이 가능합니다.
+The following functions allow you to make ad calls.
 ```java
 static public SmartAdAward showAdWidthCallback(Context context, int adOrder, String googleID, String facebookID, final OnSmartAdAwardListener callback)
 static public SmartAdAward showAdWidthCallback(Context context, String googleID, String facebookID, final OnSmartAdAwardListener callback)
@@ -177,8 +177,8 @@ public SmartAdAward(Context context, String googleID, String facebookID, OnSmart
 public void showAd()
 ```
 
-## 얼럿 광고 (SmartAdAlert)
-확인 버튼만 있는 알림 얼럿
+## SmartAdAlert
+Alert with OK button only.
 ```java
 SmartAdAlert.alert(this,
                    getAdOrder(),
@@ -199,7 +199,7 @@ SmartAdAlert.alert(this,
                        }
                    });
 ```
-확인/취소 얼럿
+Alert with OK & Cancel.
 ```java
 SmartAdAlert.confirm(this,
                      getAdOrder(),
@@ -223,7 +223,7 @@ SmartAdAlert.confirm(this,
                          }
                      });
 ```
-선택 버튼 커스터마이징 얼럿
+Customizing Alert
 ```java
 SmartAdAlert.select(this,
                     getAdOrder(),
@@ -249,7 +249,7 @@ SmartAdAlert.select(this,
                         }
                     });
 ```
-## 테스트 장비 추가
+## Add test device.
 ```java
 SmartAd.addTestDevice(SmartAd.AD_TYPE_GOOGLE,   com.google.android.gms.ads.AdRequest.DEVICE_ID_EMULATOR);
 SmartAd.addTestDevice(SmartAd.AD_TYPE_GOOGLE,   "XXXXXE00ED1B543E38E01E0741305BC0");
@@ -257,30 +257,28 @@ SmartAd.addTestDevice(SmartAd.AD_TYPE_FACEBOOK, "XXXXXf179a62345bb89544cd03ed16b
 SmartAd.addTestDevice(SmartAd.AD_TYPE_FACEBOOK, "XXXXX814b5bde5d5fb24a9c3e003ea06");
 ```
 
-## 광고 호출 커스텀 함수 등록
-SmartAd 의 모든 광고 모듈은 광고를 표시하기 전에 SmartAd.IsShowAdFunc 를 참조한다. IsShowAdFunc 는 기본적으로 null 이므로
-모든 광고가 표기되는데 인앱 결제나 특정 상황에서 광고를 중단 시키기 위해서 이 함수를 다음과 같이 커스터마이징 하면 모든 광고 호출을
-손쉽게 차단 할 수 있다.
+## Register the ad activation function
+You can register and use this function to stop ads in-app billing or under certain circumstances.
 ```java
-SmartAd.IsShowAdFunc = new SmartAd.IsShowAdListener() { // 광고 활성화 함수 적용
+SmartAd.IsShowAdFunc = new SmartAd.IsShowAdListener() {
     @Override
     public Class[] getAvailClass() {
-        // 적용할 클래스를 나열해 준다. 
-        // 아래의 경우 SmartAdAward 를 제외한 모든 광고 클래스에 적용한 예다.
+        // List the classes to be applied.
+        // Here's an example that applies to all ad classes except SmartAdAward.
         return new Class[] {SmartAdBanner.class, SmartAdAlert.class, SmartAdInterstitial.class};
     }
 
     @Override
     public boolean isShowAd() {
-        // 사용자의 상황에 맞게 내용을 커스터마이징 하면 된다.
-        // 아래 내용은 하나의 예일 뿐이다.
+        // You can customize the content to suit your situation.
+        // The following is just an example.
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         return mPrefs.getBoolean("isShowAd", true);
     }
 };
 ```
 
-## 태마 설정
+## Use Alert Theme
 ```xml
 <!-- SmartAdAlert Theme -->
 <color name="ads_Alert_Background">#c8c8c8</color>
