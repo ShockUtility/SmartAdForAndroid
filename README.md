@@ -11,7 +11,7 @@ SmartAd 는 iOS 와 Android 에서 AdMob 과 Audience Network 광고 프레임�
 # 설치
 ```java
 dependencies {
-    compile 'kr.docs:smart-ad:0.2.0'
+    compile 'kr.docs:smart-ad:0.2.1'
 } 
 ```
 
