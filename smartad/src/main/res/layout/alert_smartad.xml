@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:background="@color/ads_Alert_Title_Background"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="15dp"
             android:text="Title"
             android:textColor="@color/ads_Alert_Title_Text"
             android:textStyle="bold" />
