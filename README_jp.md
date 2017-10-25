@@ -5,20 +5,20 @@
 [![Korea](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/kr.png?raw=true)](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/README_kr.md)
 [![Japan](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/jp.png?raw=true)](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/README_jp.md)
 
-＃SmartAd紹介
+# SmartAd紹介
 SmartAdはiOSとAndroidでAdMobとAudience Networkの広告フレームワークを簡単に使用するためのライブラリです。
 
 - [SmartAd for Swift](https://github.com/ShockUtility/SmartAdForSwift)
 - [SmartAd for Android](https://github.com/ShockUtility/SmartAdForAndroid) -> [Demo Project](https://github.com/ShockUtility/SmartAdDemo)
 
-＃インストール
+# インストール
 ```java
 dependencies {
     compile 'kr.docs:smart-ad:0.2.1'
 } 
 ```
 
-＃依存性
+# 依存性
 ```java
 dependencies {
     compile 'com.google.android.gms:play-services-ads:11.+'
@@ -26,7 +26,7 @@ dependencies {
 } 
 ```
 
-＃サポートされている広告フォーマット
+# サポートされている広告フォーマット
 ## Google AdMob
 - AdView 
 - InterstitialAd
