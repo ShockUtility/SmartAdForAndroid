@@ -184,7 +184,7 @@ public void showAd()
 Alert with OK button only.
 ```java
 SmartAdAlert.alert(this,
-                   getAdOrder(),
+                   SmartAd.AD_TYPE_RANDOM,
                    "googleID",
                    "facebookID",
                    "Alert Dialog",
@@ -205,7 +205,7 @@ SmartAdAlert.alert(this,
 Alert with OK & Cancel.
 ```java
 SmartAdAlert.confirm(this,
-                     getAdOrder(),
+                     SmartAd.AD_TYPE_GOOGLE,
                      "googleID",
                      "facebookID",
                      "Confirm Dialog",
@@ -229,7 +229,7 @@ SmartAdAlert.confirm(this,
 Customizing Alert
 ```java
 SmartAdAlert.select(this,
-                    getAdOrder(),
+                    SmartAd.AD_TYPE_FACEBOOK,
                     "googleID",
                     "facebookID",
                     "Select Dialog",

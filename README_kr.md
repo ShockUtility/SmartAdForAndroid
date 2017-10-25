@@ -184,7 +184,7 @@ public void showAd()
 확인 버튼만 있는 알림 얼럿
 ```java
 SmartAdAlert.alert(this,
-                   getAdOrder(),
+                   SmartAd.AD_TYPE_RANDOM,
                    "googleID",
                    "facebookID",
                    "Alert Dialog",
@@ -205,7 +205,7 @@ SmartAdAlert.alert(this,
 확인/취소 얼럿
 ```java
 SmartAdAlert.confirm(this,
-                     getAdOrder(),
+                     SmartAd.AD_TYPE_GOOGLE,
                      "googleID",
                      "facebookID",
                      "Confirm Dialog",
@@ -229,7 +229,7 @@ SmartAdAlert.confirm(this,
 선택 버튼 커스터마이징 얼럿
 ```java
 SmartAdAlert.select(this,
-                    getAdOrder(),
+                    SmartAd.AD_TYPE_FACEBOOK,
                     "googleID",
                     "facebookID",
                     "Select Dialog",
