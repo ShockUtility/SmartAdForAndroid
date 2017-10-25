@@ -11,7 +11,7 @@ SmartAd 는 iOS 와 Android 에서 AdMob 과 Audience Network 광고 프레임�
 # 설치
 ```java
 dependencies {
-    compile 'kr.docs:smart-ad:0.1.9'
+    compile 'kr.docs:smart-ad:0.2.0'
 } 
 ```
 
@@ -177,8 +177,6 @@ public SmartAdAward(Context context, String googleID, String facebookID, OnSmart
 public void showAd()
 ```
 
-`* 주의 : 아직 Audience Network 의 보상 광고는 준비되지 않았다.`
-
 ## 얼럿 광고 (SmartAdAlert)
 확인 버튼만 있는 알림 얼럿
 ```java
@@ -253,10 +251,10 @@ SmartAdAlert.select(this,
 ```
 ## 테스트 장비 추가
 ```java
-    SmartAd.addTestDevice(SmartAd.AD_TYPE_GOOGLE,   com.google.android.gms.ads.AdRequest.DEVICE_ID_EMULATOR);
-    SmartAd.addTestDevice(SmartAd.AD_TYPE_GOOGLE,   "XXXXXE00ED1B543E38E01E0741305BC0");
-    SmartAd.addTestDevice(SmartAd.AD_TYPE_FACEBOOK, "XXXXXf179a62345bb89544cd03ed16ba");
-    SmartAd.addTestDevice(SmartAd.AD_TYPE_FACEBOOK, "XXXXX814b5bde5d5fb24a9c3e003ea06");
+SmartAd.addTestDevice(SmartAd.AD_TYPE_GOOGLE,   com.google.android.gms.ads.AdRequest.DEVICE_ID_EMULATOR);
+SmartAd.addTestDevice(SmartAd.AD_TYPE_GOOGLE,   "XXXXXE00ED1B543E38E01E0741305BC0");
+SmartAd.addTestDevice(SmartAd.AD_TYPE_FACEBOOK, "XXXXXf179a62345bb89544cd03ed16ba");
+SmartAd.addTestDevice(SmartAd.AD_TYPE_FACEBOOK, "XXXXX814b5bde5d5fb24a9c3e003ea06");
 ```
 
 ## 광고 호출 커스텀 함수 등록
@@ -284,12 +282,12 @@ SmartAd.IsShowAdFunc = new SmartAd.IsShowAdListener() { // 광고 활성화 함�
 
 ## 태마 설정
 ```xml
-    <!-- SmartAdAlert Theme -->
-    <color name="ads_Alert_Background">#c8c8c8</color>
-    <color name="ads_Alert_Title_Background">#615aa0</color>
-    <color name="ads_Alert_Title_Text">#ffffff</color>
-    <color name="ads_Alert_Button_Background">#FFFFFF</color>
-    <color name="ads_Alert_Button_Text">#615aa0</color>
+<!-- SmartAdAlert Theme -->
+<color name="ads_Alert_Background">#c8c8c8</color>
+<color name="ads_Alert_Title_Background">#615aa0</color>
+<color name="ads_Alert_Title_Text">#ffffff</color>
+<color name="ads_Alert_Button_Background">#FFFFFF</color>
+<color name="ads_Alert_Button_Text">#615aa0</color>
 ```
 
 # License
