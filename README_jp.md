@@ -95,7 +95,7 @@ SmartAdInterstitial mAd = SmartAdInterstitial.showAdWidthCallback(this, "googleI
 ...
 @Override
 public void onDestroy() {
-    if (mAd!=null) mAd.destroy();  // 이 부분이 없을 경우 호출한 화면이 닫힌 후 다른 화면에서 광고가 표시될 수 있다.
+    if (mAd!=null) mAd.destroy();  // この部分がない場合は、呼び出した画面が閉じた後、他の画面では、広告が表示されることができる。
     super.onDestroy();
 }
 ```
