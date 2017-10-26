@@ -52,7 +52,7 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
 
         if (SmartAd.IsShowAd(this)) {
             mLoading.setVisibility(View.VISIBLE);
-            adBanner.showAd(SmartAdBanner.AD_SIZE_RECTANGLE, mAdOrder, mGoogleID, mFacebookID);
+            adBanner.showAd(SmartAdBanner.AD_SIZE_SMALL, mAdOrder, mGoogleID, mFacebookID);
 
             // Facebook error may not be detected in some cases!!!
             final Handler handler = new Handler();
