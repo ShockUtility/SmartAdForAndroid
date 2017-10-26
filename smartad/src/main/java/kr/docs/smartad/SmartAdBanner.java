@@ -71,7 +71,7 @@ public class SmartAdBanner extends LinearLayout {
         super.onSizeChanged(w, h, oldw, oldh);
 
         // 뷰가 로드되고 레이아웃이 처음 적용되어 사이즈가 처음 조정 되었을때 베너 최소 크기에 대한 경고 메세지를 표시
-        if (mIsAutoStart) {
+//        if (mIsAutoStart) {
             try {
                 if (!mIsLoadedLayout && w > 0) {
                     mIsLoadedLayout = true;
@@ -93,7 +93,7 @@ public class SmartAdBanner extends LinearLayout {
             } catch (Exception ex) {
                 mIsLoadedLayout = false;
             }
-        }
+//        }
     }
 
     public void showAd() {

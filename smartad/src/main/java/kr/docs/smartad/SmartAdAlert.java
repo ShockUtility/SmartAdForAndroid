@@ -21,7 +21,6 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     static public final int BUTTON_BACK     = 3;
 
     private SmartAdAlertListener            mListener;
-    private int                             mAdSize;
     private String                          mGoogleID;
     private String                          mFacebookID;
     private String                          mAlertTitle;
@@ -53,7 +52,7 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
 
         if (SmartAd.IsShowAd(this)) {
             mLoading.setVisibility(View.VISIBLE);
-            adBanner.showAd(mAdSize, mAdOrder, mGoogleID, mFacebookID);
+            adBanner.showAd(SmartAdBanner.AD_SIZE_RECTANGLE, mAdOrder, mGoogleID, mFacebookID);
 
             // Facebook error may not be detected in some cases!!!
             final Handler handler = new Handler();
@@ -113,7 +112,6 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     {
         super(context, android.R.style.Theme_DeviceDefault_Dialog_NoActionBar);
 
-        this.mAdSize         = SmartAdBanner.AD_SIZE_RECTANGLE;
         this.mAdOrder        = (adOrder==SmartAd.AD_TYPE_RANDOM) ? SmartAd.randomAdOrder() : adOrder;
         this.mGoogleID       = googleID;
         this.mFacebookID     = facebookID;
