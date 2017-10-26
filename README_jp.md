@@ -14,7 +14,7 @@ SmartAdはiOSとAndroidでAdMobとAudience Networkの広告フレームワーク
 # インストール
 ```java
 dependencies {
-    compile 'kr.docs:smart-ad:0.2.2'
+    compile 'kr.docs:smart-ad:0.2.7'
 } 
 ```
 
