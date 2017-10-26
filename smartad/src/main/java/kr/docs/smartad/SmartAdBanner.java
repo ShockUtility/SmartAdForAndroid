@@ -211,7 +211,7 @@ public class SmartAdBanner extends LinearLayout {
 
     private com.facebook.ads.AdSize getFacebookAdSize() {
         switch (mAdSize) {
-            case AD_SIZE_SMALL     : return com.facebook.ads.AdSize.BANNER_HEIGHT_50;
+            case AD_SIZE_SMALL     : return new com.facebook.ads.AdSize(320, 50);//com.facebook.ads.AdSize.BANNER_HEIGHT_50;
             case AD_SIZE_LARGE     : return com.facebook.ads.AdSize.BANNER_HEIGHT_90;
             case AD_SIZE_RECTANGLE : return com.facebook.ads.AdSize.RECTANGLE_HEIGHT_250;
         }
