@@ -33,7 +33,7 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     private ProgressBar                     mLoading;
     private TextView                        mBtnAction1;
     private TextView                        mBtnAction2;
-    private long                            mAalertButtonDelayMilliseconds = 1500;
+    private long                            mAalertButtonDelayMilliseconds = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +57,7 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
             // Facebook error may not be detected in some cases!!!
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mBtnAction1.setEnabled(true);
-                    mBtnAction2.setEnabled(true);
-                }
+                @Override public void run() { activeResultButton(); }
             }, mAalertButtonDelayMilliseconds);
         } else {
             adBanner.setVisibility(View.GONE);
@@ -103,6 +99,12 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
     public void onBackPressed() {
         if(mListener != null) mListener.result(BUTTON_BACK);
         super.onBackPressed();
+    }
+
+    private void activeResultButton() {
+        mLoading.setVisibility(View.GONE);
+        mBtnAction1.setEnabled(true);
+        mBtnAction2.setEnabled(true);
     }
 
     public SmartAdAlert(Context context,
@@ -175,16 +177,12 @@ public class SmartAdAlert extends Dialog implements SmartAdBanner.OnSmartAdBanne
 
     @Override
     public void onSmartAdBannerDone(int type) {
-        mLoading.setVisibility(View.GONE);
-        mBtnAction1.setEnabled(true);
-        mBtnAction2.setEnabled(true);
+        activeResultButton();
     }
 
     @Override
     public void onSmartAdBannerFail(int type) {
-        mLoading.setVisibility(View.GONE);
-        mBtnAction1.setEnabled(true);
-        mBtnAction2.setEnabled(true);
+        activeResultButton();
     }
 
     // Callback Listener ***************************************************************************

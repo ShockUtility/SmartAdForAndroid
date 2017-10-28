@@ -27,8 +27,6 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-ads:11.+'
     compile 'com.facebook.android:audience-network-sdk:4.+'
-
-    testCompile 'junit:junit:4.12'
 }
 
 Properties properties = new Properties()
@@ -38,7 +36,7 @@ publish {
     userOrg = properties.getProperty("bintray.user")
     groupId = 'kr.docs'
     artifactId = 'smart-ad'
-    publishVersion = '0.2.7'
+    publishVersion = '0.3.0'
     desc = 'Smart Ad with AdMob &amp; Audience Network'
     website = 'https://github.com/ShockUtility/SmartAdForAndroid'
     issueTracker = "https://github.com/ShockUtility/SmartAdForAndroid/issues"

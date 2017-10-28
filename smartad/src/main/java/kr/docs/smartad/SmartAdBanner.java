@@ -18,7 +18,6 @@ public class SmartAdBanner extends LinearLayout {
 
     private OnSmartAdBannerListener             mListener;
     private int                                 mAdSize;
-    private boolean                             mIsAutoStart;
     private String                              mGoogleID;
     private String                              mFacebookID;
     private boolean                             mIsLoadedLayout = false;
@@ -53,17 +52,13 @@ public class SmartAdBanner extends LinearLayout {
         TypedArray types = context.obtainStyledAttributes(attrs, R.styleable.SmartAdBanner);
 
         mAdSize        = types.getInt(R.styleable.SmartAdBanner_adv_BannerSize, AD_SIZE_AUTO);
-        mIsAutoStart   = types.getBoolean(R.styleable.SmartAdBanner_adv_IsAutoStart, true);
         mGoogleID      = types.getString(R.styleable.SmartAdBanner_adv_GoogleID);
         mFacebookID    = types.getString(R.styleable.SmartAdBanner_adv_FacebookID);
 
-        switch (types.getInt(R.styleable.SmartAdBanner_adv_AdOrder, SmartAd.AD_TYPE_RANDOM)) {
-            case SmartAd.AD_TYPE_RANDOM  : mAdOrder = SmartAd.randomAdOrder();   break;
-            case SmartAd.AD_TYPE_GOOGLE  : mAdOrder = SmartAd.AD_TYPE_GOOGLE;   break;
-            case SmartAd.AD_TYPE_FACEBOOK: mAdOrder = SmartAd.AD_TYPE_FACEBOOK; break;
-        }
+        int adOrder = types.getInt(R.styleable.SmartAdBanner_adv_AdOrder, SmartAd.AD_TYPE_RANDOM);
+        mAdOrder = (adOrder==SmartAd.AD_TYPE_RANDOM) ? SmartAd.randomAdOrder() : adOrder;
 
-        if (mIsAutoStart) showAd();
+        if (types.getBoolean(R.styleable.SmartAdBanner_adv_IsAutoStart, true)) showAd();
     }
 
     @Override
@@ -71,29 +66,27 @@ public class SmartAdBanner extends LinearLayout {
         super.onSizeChanged(w, h, oldw, oldh);
 
         // 뷰가 로드되고 레이아웃이 처음 적용되어 사이즈가 처음 조정 되었을때 베너 최소 크기에 대한 경고 메세지를 표시
-//        if (mIsAutoStart) {
-            try {
-                if (!mIsLoadedLayout && w > 0) {
-                    mIsLoadedLayout = true;
+        try {
+            if (!mIsLoadedLayout && w > 0) {
+                mIsLoadedLayout = true;
 
-                    // 광고 공간에 대한 경고 메세지를 처리
-                    float widthPX = w / getContext().getResources().getDisplayMetrics().density;
-                    if (((mAdSize == AD_SIZE_RECTANGLE) && (widthPX < 300.0)) ||
+                // 광고 공간에 대한 경고 메세지를 처리
+                float widthPX = w / getContext().getResources().getDisplayMetrics().density;
+                if (((mAdSize == AD_SIZE_RECTANGLE) && (widthPX < 300.0)) ||
                         ((mAdSize != AD_SIZE_RECTANGLE) && (widthPX < 320.0)))
-                    {
-                        Log.w("SmartAd",
-                                "There is a problem with the width for displaying the ad!\n"+
-                                "   - AD_SIZE_AUTO      : Min 320dp\n"+
-                                "   - AD_SIZE_SMALL     : Min 320dp\n"+
-                                "   - AD_SIZE_LARGE     : Min 320dp\n"+
-                                "   - AD_SIZE_RECTANGLE : Min 300dp\n"+
-                                "   - Current DP        : "+widthPX+"dp)");
-                    }
+                {
+                    Log.w("SmartAd",
+                            "There is a problem with the width for displaying the ad!\n"+
+                                    "   - AD_SIZE_AUTO      : Min 320dp\n"+
+                                    "   - AD_SIZE_SMALL     : Min 320dp\n"+
+                                    "   - AD_SIZE_LARGE     : Min 320dp\n"+
+                                    "   - AD_SIZE_RECTANGLE : Min 300dp\n"+
+                                    "   - Current DP        : "+widthPX+"dp)");
                 }
-            } catch (Exception ex) {
-                mIsLoadedLayout = false;
             }
-//        }
+        } catch (Exception ex) {
+            mIsLoadedLayout = false;
+        }
     }
 
     public void showAd() {
@@ -114,7 +107,7 @@ public class SmartAdBanner extends LinearLayout {
         showAd();
     }
 
-    public void setOnSmartAdBannerListener(OnSmartAdBannerListener listener) {
+    public void setOnSmartAdBannerListener(final OnSmartAdBannerListener listener) {
         mListener = listener;
     }
 

@@ -39,7 +39,7 @@ public class SmartAdAward implements com.google.android.gms.ads.reward.RewardedV
         this.mFacebookID = facebookID;
     }
 
-    public SmartAdAward(Context context, String googleID, String facebookID, OnSmartAdAwardListener callback) {
+    public SmartAdAward(Context context, String googleID, String facebookID, final OnSmartAdAwardListener callback) {
         this(context, SmartAd.AD_TYPE_RANDOM, googleID, facebookID, callback);
     }
 
