@@ -181,6 +181,7 @@ public void showAd()
 ```
 
 ## SmartAdAlert
+![Screenshot](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/screen_02.png?raw=true)
 OKボタンだけあるアラート
 ```java
 SmartAdAlert.alert(this,

@@ -181,6 +181,7 @@ public void showAd()
 ```
 
 ## 얼럿 광고 (SmartAdAlert)
+![Screenshot](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/screen_02.png?raw=true)
 확인 버튼만 있는 알림 얼럿
 ```java
 SmartAdAlert.alert(this,
