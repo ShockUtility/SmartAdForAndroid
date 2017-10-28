@@ -40,6 +40,7 @@ dependencies {
 # Usage
 
 ## SmartAdBanner
+![Screenshot](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/screen_01.png?raw=true)
 Add the view to the UI screen, select the 'SmartAdBanner' class and set only 5 properties, and it works without coding.
 
 ```xml

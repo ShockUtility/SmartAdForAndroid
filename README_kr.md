@@ -40,6 +40,7 @@ dependencies {
 # 사용법
 
 ## 기본 베너 (SmartAdBanner)
+![Screenshot](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/screen_01.png?raw=true)
 UI 화면에 뷰를 추가하고 'SmartAdBanner' 클래스를 선택한 후 5개의 프로퍼티만 셋팅하면 코딩 없이 바로 동작 됩니다.
 
 ```xml

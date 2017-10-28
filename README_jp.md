@@ -40,6 +40,7 @@ dependencies {
 # 使い方
 
 ## SmartAdBanner
+![Screenshot](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/screen_01.png?raw=true)
 UI画面にビューを追加し、「SmartAdBanner」クラスを選択した後、5つのプロパティだけ設定すれば、コーディングなしですぐに動作します。
 
 ```xml
