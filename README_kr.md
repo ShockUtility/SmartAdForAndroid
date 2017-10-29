@@ -10,6 +10,7 @@ SmartAd 는 iOS 와 Android 에서 AdMob 과 Audience Network 광고 프레임�
 
 - [SmartAd for Android](https://github.com/ShockUtility/SmartAdForAndroid) -> [Demo Project](https://github.com/ShockUtility/SmartAdDemoForAndroid)
 - [SmartAd for Swift](https://github.com/ShockUtility/SmartAdForSwift) -> [Demo Project](https://github.com/ShockUtility/SmartAdDemoForSwift)
+![Screenshot](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/screen_00.png?raw=true)
 
 # 설치
 ```java
