@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -25,7 +28,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.google.android.gms:play-services-ads:11.8.0'
+    compile 'com.google.android.gms:play-services-ads:12.0.0'
     compile 'com.facebook.android:audience-network-sdk:4.28.0'
 }
 
@@ -36,7 +39,7 @@ publish {
     userOrg = properties.getProperty("bintray.user")
     groupId = 'kr.docs'
     artifactId = 'smart-ad'
-    publishVersion = '0.3.1'
+    publishVersion = '0.3.3'
     desc = 'Smart Ad with AdMob &amp; Audience Network'
     website = 'https://github.com/ShockUtility/SmartAdForAndroid'
     issueTracker = "https://github.com/ShockUtility/SmartAdForAndroid/issues"
