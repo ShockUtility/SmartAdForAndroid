@@ -16,15 +16,15 @@ SmartAd is an easy-to-use library for AdMob and Audience Network advertising fra
 # Install
 ```java
 dependencies {
-    compile 'kr.docs:smart-ad:0.3.5'
+    implementation 'kr.docs:smart-ad:0.3.5'
 } 
 ```
 
 # Dependencies
 ```java
 dependencies {
-    compile 'com.google.android.gms:play-services-ads:11.+'
-    compile 'com.facebook.android:audience-network-sdk:4.+'
+    implementation 'com.google.android.gms:play-services-ads:11.+'
+    implementation 'com.facebook.android:audience-network-sdk:4.+'
 } 
 ```
 
