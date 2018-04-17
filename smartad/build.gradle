@@ -3,7 +3,7 @@ apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "26.0.3"
+    buildToolsVersion "27.0.3"
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
@@ -23,13 +23,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.google.android.gms:play-services-ads:12.0.0'
-    compile 'com.facebook.android:audience-network-sdk:4.28.0'
+    implementation 'com.google.android.gms:play-services-ads:15.0.0'
+    implementation 'com.facebook.android:audience-network-sdk:4.28.0'
 }
 
 Properties properties = new Properties()
@@ -39,7 +36,7 @@ publish {
     userOrg = properties.getProperty("bintray.user")
     groupId = 'kr.docs'
     artifactId = 'smart-ad'
-    publishVersion = '0.3.3'
+    publishVersion = '0.3.5'
     desc = 'Smart Ad with AdMob &amp; Audience Network'
     website = 'https://github.com/ShockUtility/SmartAdForAndroid'
     issueTracker = "https://github.com/ShockUtility/SmartAdForAndroid/issues"
@@ -47,4 +44,5 @@ publish {
 }
 
 // https://bintray.com/shockutility/maven/smart-ad
-// 업로드 : 버전 확인 후 ./.upload.sh
+// publishVersion 버전과 GitHub 릴리즈 버전 업데이트 후
+// 업로드 : ./.upload.sh

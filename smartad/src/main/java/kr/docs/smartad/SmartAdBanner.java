@@ -126,18 +126,30 @@ public class SmartAdBanner extends LinearLayout {
     }
 
     public void destroy() {
-        if (mGoogleAdView!=null) mGoogleAdView.destroy();
-        if (mFacebookAdView!=null) mFacebookAdView.destroy();
+        mListener = null;
+        clearAdViews();
+    }
+
+    private void clearAdViews() {
+        if (mGoogleAdView != null) {
+            this.removeView(mGoogleAdView);
+            mGoogleAdView.setAdListener(null);
+            mGoogleAdView.destroy();
+            mGoogleAdView = null;
+        }
+        if (mFacebookAdView != null) {
+            this.removeView(mFacebookAdView);
+            mFacebookAdView.setAdListener(null);
+            mFacebookAdView.destroy();
+            mFacebookAdView = null;
+        }
     }
 
     // Google **************************************************************************************
 
     private void showGoogle() {
         if (mGoogleID != null) {
-            if (mGoogleAdView != null) {
-                this.removeView(mGoogleAdView);
-                mGoogleAdView = null;
-            }
+            clearAdViews();
 
             mGoogleAdView = new com.google.android.gms.ads.AdView(getContext());
             this.addView(mGoogleAdView);
@@ -187,10 +199,7 @@ public class SmartAdBanner extends LinearLayout {
 
     private void showFacebook() {
         if (mFacebookID != null) {
-            if (mFacebookAdView != null) {
-                this.removeView(mFacebookAdView);
-                mFacebookAdView = null;
-            }
+            clearAdViews();
 
             mFacebookAdView = new com.facebook.ads.AdView(getContext(), mFacebookID, getFacebookAdSize());
             this.addView(mFacebookAdView);
