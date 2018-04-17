@@ -1,6 +1,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform](https://img.shields.io/badge/Platform-Android-green.svg)](https://developer.android.com)
 [![GitHub release](https://img.shields.io/github/release/ShockUtility/SmartAdForAndroid.svg)](https://github.com/ShockUtility/SmartAdForAndroid)
+[![Release](https://img.shields.io/badge/release-v0.0.3-blue.svg)](https://github.com/ShockUtility/SmartAdForAndroid)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Smart%20Ad%20For%20Android-green.svg?style=flat)](https://android-arsenal.com/details/1/6387)
 [![English](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/en.png?raw=true)](https://github.com/ShockUtility/SmartAdForAndroid)
 [![Korea](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/kr.png?raw=true)](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/README_kr.md)
