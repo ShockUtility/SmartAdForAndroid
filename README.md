@@ -1,4 +1,4 @@
-[![License](https://raw.githubusercontent.com/ShockUtility/SmartAdForAndroid/master/res/MIT.png?raw=true)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/Android.png?raw=true)](https://developer.android.com)
 [![Android Arsenal](https://github.com/ShockUtility/SmartAdForAndroid/blob/master/res/Arsenal.png?raw=true)](https://android-arsenal.com/details/1/6387)
 [![GitHub release](https://img.shields.io/github/release/ShockUtility/SmartAdForAndroid.svg)](https://github.com/ShockUtility/SmartAdForAndroid)
