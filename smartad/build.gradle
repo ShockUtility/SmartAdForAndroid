@@ -25,8 +25,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.google.android.gms:play-services-ads:15.0.0'
-    implementation 'com.facebook.android:audience-network-sdk:4.28.0'
+    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+    implementation 'com.facebook.android:audience-network-sdk:4.99.0'
 }
 
 Properties properties = new Properties()
@@ -36,7 +36,7 @@ publish {
     userOrg = properties.getProperty("bintray.user")
     groupId = 'kr.docs'
     artifactId = 'smart-ad'
-    publishVersion = '0.3.5'
+    publishVersion = '0.3.7'
     desc = 'Smart Ad with AdMob &amp; Audience Network'
     website = 'https://github.com/ShockUtility/SmartAdForAndroid'
     issueTracker = "https://github.com/ShockUtility/SmartAdForAndroid/issues"

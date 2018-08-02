@@ -145,6 +145,10 @@ public class SmartAdBanner extends LinearLayout {
         }
     }
 
+    public boolean isShowAd() {
+        return mGoogleAdView != null || mFacebookAdView != null;
+    }
+
     // Google **************************************************************************************
 
     private void showGoogle() {
