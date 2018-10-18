@@ -180,8 +180,10 @@ public class SmartAdInterstitial implements com.facebook.ads.InterstitialAdListe
         Log.e("SmartAd", "SmartAdInterstitial : type = Facebook, error code = "+adError.getErrorCode()+", error message = "+adError.getErrorMessage());
 
         ad.destroy();
-        mFacebookAd.destroy();
-        mFacebookAd = null;
+        if(mFacebookAd !=null){
+            mFacebookAd.destroy();
+            mFacebookAd = null;
+        }
 
         if ((mAdOrder == SmartAd.AD_TYPE_FACEBOOK) && (mGoogleID != null)) loadGoogle();
         else onFail(SmartAd.AD_TYPE_FACEBOOK);
